@@ -25,6 +25,7 @@
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
+.idea/**/codeStyleConfig.xml
 .idea/**/dbnavigator.xml
 
 # Gradle
@@ -95,3 +96,5 @@ target/
 
 # nuh uh, u wish
 sftp.sh
+
+betterkingdoms.iml
