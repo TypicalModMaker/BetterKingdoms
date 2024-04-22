@@ -7,7 +7,7 @@ description: Kingdoms Plugin
 website: https://github.com/TypicalModMaker/BetterKingdoms
 libraries:
   - io.ebean:ebean:14.1.0
-  - com.mysql:mysql-connector-j:8.3.0
   - io.ebean:ebean-ddl-generator:14.1.0
   - org.mariadb.jdbc:mariadb-java-client:3.3.3
   - com.h2database:h2:2.2.224
+  - com.mysql:mysql-connector-j:8.3.0

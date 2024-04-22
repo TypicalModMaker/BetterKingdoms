@@ -18,7 +18,7 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class KingdomsCommand extends BaseCommand {
 
-    @Subcommand("help")
+    @Subcommand("%help")
     @CatchUnknown
     @HelpCommand
     @Default
@@ -26,7 +26,7 @@ public class KingdomsCommand extends BaseCommand {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("create|zaloz")
+    @Subcommand("%create")
     @Syntax("<name>")
     @CommandPermission("betterkingdoms.create")
     public void createKingdom(Player player, String kingdomName) {
@@ -58,31 +58,31 @@ public class KingdomsCommand extends BaseCommand {
         player.sendMessage(ComponentUtil.deserialize("&aCreated kingdom " + kingdomName + "!"));
     }
 
-    @Subcommand("zajmij|claim")
+    @Subcommand("%claim")
     @CommandPermission("betterkingdoms.claim")
     public void claimTerrain(Player player) {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("porzuc|abandon")
+    @Subcommand("%abandon")
     @CommandPermission("betterkingdoms.abandon")
     public void abandonKingdom(Player player) {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("krol|king")
+    @Subcommand("%king")
     @CommandPermission("betterkingdoms.king")
     public void kingdomKing(Player player) {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("opis|lore|description")
+    @Subcommand("%description")
     @CommandPermission("betterkingdoms.description")
     public void kingdomDescription(Player player) {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("manualsave")
+    @Subcommand("%manualsave")
     @CommandPermission("betterkingdoms.admin.manualsave")
     public void databaseSave(Player player) {
         BetterKingdoms.getInstance().getThreadPool().submit(BetterKingdoms.getInstance().getDatabaseManager()::saveAllKingdoms);

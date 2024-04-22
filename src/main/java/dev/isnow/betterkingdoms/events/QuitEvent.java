@@ -1,6 +1,5 @@
 package dev.isnow.betterkingdoms.events;
 
-import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -11,9 +11,7 @@ import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,12 +34,13 @@ public final class BetterKingdoms extends JavaPlugin {
         final long startTime = System.currentTimeMillis();
 
         instance = this;
-        threadPool = Executors.newFixedThreadPool(50, new ThreadFactoryBuilder().setNameFormat("betterkingdoms-worker-thread-%d").build());
-
         BetterLogger.watermark();
 
         BetterLogger.info("Initializating config");
         configManager = new ConfigManager(this);
+
+        threadPool = Executors.newFixedThreadPool(configManager.getMasterConfig().getThreadAmount(), new ThreadFactoryBuilder().setNameFormat("betterkingdoms-worker-thread-%d").build());
+
         BetterLogger.info("Initializating events");
         ClassRegistrationManager.loadListeners("dev.isnow.betterkingdoms.events");
 
@@ -49,8 +48,8 @@ public final class BetterKingdoms extends JavaPlugin {
         commandsManager = new CommandsManager(this);
 
         BetterLogger.info("Initializating database connection");
-        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-        ClassLoader pluginClassLoader = BetterKingdoms.class.getClassLoader();
+        final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader pluginClassLoader = BetterKingdoms.class.getClassLoader();
 
         Thread.currentThread().setContextClassLoader(pluginClassLoader);
 
@@ -67,7 +66,7 @@ public final class BetterKingdoms extends JavaPlugin {
             configManager.getMasterConfig().setFirstRun(false);
         }
 
-        String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));
+        final String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));
         BetterLogger.info("Finished loading in " + date);
     }
 

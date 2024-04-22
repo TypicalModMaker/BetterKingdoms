@@ -1,7 +1,6 @@
 package dev.isnow.betterkingdoms.database;
 
 import dev.isnow.betterkingdoms.BetterKingdoms;
-import dev.isnow.betterkingdoms.config.impl.database.DatabaseType;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdom;
@@ -9,17 +8,12 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomUser;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
-import io.ebean.Query;
 import io.ebean.Transaction;
-import io.ebean.annotation.Platform;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
-import io.ebeaninternal.server.util.Str;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Bukkit;
-import org.checkerframework.checker.units.qual.K;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +61,7 @@ public class DatabaseManager {
     }
 
     private DataSourceConfig getDataSourceConfig(BetterKingdoms plugin) {
-        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        final DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dev.isnow.betterkingdoms.config.impl.database.Database authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig().getDatabase();
 
         dataSourceConfig.setUsername(authConfig.getUsername());

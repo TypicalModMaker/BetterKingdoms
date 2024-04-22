@@ -25,7 +25,6 @@
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
-.idea/**/codeStyleConfig.xml
 .idea/**/dbnavigator.xml
 
 # Gradle
@@ -86,9 +85,6 @@ fabric.properties
 # that are supposed to be shared within teams.
 
 .idea/*
-
-!.idea/codeStyles
-!.idea/runConfigurations
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all
 

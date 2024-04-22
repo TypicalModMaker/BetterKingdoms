@@ -1,7 +1,5 @@
 package dev.isnow.betterkingdoms.config.impl;
 
-import dev.isnow.betterkingdoms.config.impl.database.Database;
-import dev.isnow.betterkingdoms.config.impl.database.DatabaseType;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import pl.mikigal.config.Config;
 import pl.mikigal.config.annotation.Comment;
@@ -22,4 +20,8 @@ public interface MasterConfig extends Config {
     default boolean getDebug() {
         return false;
     }
+
+
+    @Comment("Thread amount - Try increasing if your database is lagging with higher player count")
+    default int getThreadAmount() { return 50; }
 }
