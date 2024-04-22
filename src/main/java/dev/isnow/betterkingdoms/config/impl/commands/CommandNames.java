@@ -11,9 +11,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class CommandNames implements Serializable {
     private String help;
-    private String create;
+    private String create, create_tab_completion;
     private String claim;
-    private String abandon;
+    private String disband, disband_admin_tab_completion;
     private String king;
     private String description;
     private String manualsave;

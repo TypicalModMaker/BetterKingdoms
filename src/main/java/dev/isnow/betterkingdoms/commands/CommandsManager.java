@@ -17,10 +17,14 @@ public class CommandsManager {
         internalCommandManager.enableUnstableAPI("help");
 
         final CommandNames commandNames = plugin.getConfigManager().getCommandsConfig().getCommandNames();
+
         internalCommandManager.getCommandReplacements().addReplacement("help", commandNames.getHelp());
+
         internalCommandManager.getCommandReplacements().addReplacement("create", commandNames.getCreate());
+        internalCommandManager.getCommandReplacements().addReplacement("create_syntax", commandNames.getCreate_tab_completion());
+
         internalCommandManager.getCommandReplacements().addReplacement("claim", commandNames.getClaim());
-        internalCommandManager.getCommandReplacements().addReplacement("abandon", commandNames.getAbandon());
+        internalCommandManager.getCommandReplacements().addReplacement("disband", commandNames.getDisband());
         internalCommandManager.getCommandReplacements().addReplacement("king", commandNames.getKing());
         internalCommandManager.getCommandReplacements().addReplacement("description", commandNames.getDescription());
         internalCommandManager.getCommandReplacements().addReplacement("manualsave", commandNames.getManualsave());

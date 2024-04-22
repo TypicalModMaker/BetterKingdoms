@@ -16,9 +16,9 @@ public class KingdomManager {
     private final Map<UUID, KingdomUser> kingdomUsers = new HashMap<>();
 
     public final void addUser(final KingdomUser user) {
-        kingdomUsers.put(user.getPlayeruuid(), user);
+        kingdomUsers.put(user.getPlayerUuid(), user);
 
-        final Kingdom attachedKingdom = user.getAttachedkingdom();
+        final Kingdom attachedKingdom = user.getAttachedKingdom();
 
         if (attachedKingdom == null) return;
 
@@ -26,12 +26,12 @@ public class KingdomManager {
             BetterLogger.debug("Adding " + attachedKingdom.getName() + " to the cache kingdoms list");
             kingdoms.put(attachedKingdom.getName(), attachedKingdom);
         } else {
-            user.setAttachedkingdom(findKingdom(attachedKingdom.getName(), false).orElse(attachedKingdom));
+            user.setAttachedKingdom(findKingdom(attachedKingdom.getName(), false).orElse(attachedKingdom));
         }
     }
 
     public final void removeUser(final KingdomUser user) {
-        removeUser(user.getPlayeruuid());
+        removeUser(user.getPlayerUuid());
     }
 
     public final void removeUser(final Player player) {
@@ -45,8 +45,8 @@ public class KingdomManager {
         if (user.isPresent()) {
             final KingdomUser kingdomUser = user.get();
 
-            final Kingdom attachedKingdom = kingdomUser.getAttachedkingdom();
-            if (attachedKingdom != null && !attachedKingdom.anyMemberOnline(kingdomUser.getPlayeruuid())) {
+            final Kingdom attachedKingdom = kingdomUser.getAttachedKingdom();
+            if (attachedKingdom != null && !attachedKingdom.anyMemberOnline(kingdomUser.getPlayerUuid())) {
                 removeKingdom(attachedKingdom, false);
             }
         }
@@ -84,7 +84,7 @@ public class KingdomManager {
         if (kingdomUser.isEmpty() && fetchDB) {
             KingdomUser sqlKingdomUser = BetterKingdoms.getInstance().getDatabaseManager().loadUser(player);
             if (sqlKingdomUser != null) {
-                kingdomUsers.put(sqlKingdomUser.getPlayeruuid(), sqlKingdomUser);
+                kingdomUsers.put(sqlKingdomUser.getPlayerUuid(), sqlKingdomUser);
 
                 kingdomUser = Optional.of(sqlKingdomUser);
             }

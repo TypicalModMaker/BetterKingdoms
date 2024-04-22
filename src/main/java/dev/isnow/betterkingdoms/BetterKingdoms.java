@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.isnow.betterkingdoms.commands.CommandsManager;
 import dev.isnow.betterkingdoms.config.ConfigManager;
 import dev.isnow.betterkingdoms.database.DatabaseManager;
+import dev.isnow.betterkingdoms.hook.placeholderapi.BetterKingdomsExpansion;
 import dev.isnow.betterkingdoms.kingdoms.KingdomManager;
 import dev.isnow.betterkingdoms.reflection.ClassRegistrationManager;
 import dev.isnow.betterkingdoms.util.DateUtil;
@@ -64,6 +65,11 @@ public final class BetterKingdoms extends JavaPlugin {
         } else {
             BetterLogger.info("Connected successfully.");
             configManager.getMasterConfig().setFirstRun(false);
+        }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            BetterLogger.info("Registering PlaceholderAPI hook");
+            new BetterKingdomsExpansion().register();
         }
 
         final String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));

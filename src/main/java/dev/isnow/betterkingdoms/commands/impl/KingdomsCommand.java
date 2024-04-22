@@ -8,6 +8,7 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.util.ComponentUtil;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class KingdomsCommand extends BaseCommand {
     }
 
     @Subcommand("%create")
-    @Syntax("<name>")
+    @CommandCompletion("%create_tab_completion")
     @CommandPermission("betterkingdoms.create")
     public void createKingdom(Player player, String kingdomName) {
         final Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(player);
@@ -38,7 +39,7 @@ public class KingdomsCommand extends BaseCommand {
         }
 
         KingdomUser kUser = user.get();
-        if(kUser.getAttachedkingdom() != null) {
+        if(kUser.getAttachedKingdom() != null) {
             player.sendMessage(ComponentUtil.deserialize("&cYou already have a kingdom!"));
             return;
         }
@@ -48,7 +49,12 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-        Kingdom kingdom = new Kingdom(kingdomName);
+        if(player.getLocation().getBlock().getType() != Material.AIR) {
+            player.sendMessage(ComponentUtil.deserialize("&cCannot place nexus in your location!"));
+            return;
+        }
+
+        Kingdom kingdom = new Kingdom(kingdomName, player.getLocation());
         kingdom.addMember(kUser, KingdomRank.OWNER);
 
         BetterKingdoms.getInstance().getKingdomManager().addKingdom(kingdom);
@@ -64,10 +70,26 @@ public class KingdomsCommand extends BaseCommand {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("%abandon")
-    @CommandPermission("betterkingdoms.abandon")
-    public void abandonKingdom(Player player) {
-        player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
+    @Subcommand("%disband")
+    @CommandPermission("betterkingdoms.disband")
+    public void disbandKingdom(Player player) {
+        final Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(player);
+
+        if(user.isEmpty()) {
+            player.sendMessage(ComponentUtil.deserialize("&cFailed to find your kingdoms data. Contact an administrator to resolve this issue."));
+            return;
+        }
+
+        KingdomUser kUser = user.get();
+        if(kUser.getAttachedKingdom() == null) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou don't have a kingdom!"));
+            return;
+        }
+
+        if(kUser.getKingdomRank() != null && kUser.getKingdomRank() != KingdomRank.OWNER) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou are not the owner of this kingdom!"));
+            return;
+        }
     }
 
     @Subcommand("%king")
@@ -83,9 +105,16 @@ public class KingdomsCommand extends BaseCommand {
     }
 
     @Subcommand("admin %manualsave")
-    @CommandPermission("betterkingdoms.admin.manualsave")
+    @CommandPermission("betterkingdoms.admin.manualsave|betterkingdoms.admin.*")
     public void databaseSave(Player player) {
         BetterKingdoms.getInstance().getThreadPool().submit(BetterKingdoms.getInstance().getDatabaseManager()::saveAllKingdoms);
+    }
+
+    @Subcommand("admin %disband")
+    @CommandCompletion("%admin_disband_tab_completion")
+    @CommandPermission("betterkingdoms.admin.disband|betterkingdoms.admin.*")
+    public void disbandKingdomOther(Player player, String kingdomName) {
+
     }
 
 

@@ -7,7 +7,6 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomUser;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
-import io.avaje.applog.AppLog;
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
 import io.ebean.Transaction;
@@ -20,8 +19,7 @@ import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
+import org.bukkit.Location;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +29,7 @@ import java.util.UUID;
 @Getter
 public class DatabaseManager {
 
-    public static final int SCHEMA_VERSION = 2;
+    public static final int SCHEMA_VERSION = 3;
 
     private final Database db;
 
@@ -64,7 +62,7 @@ public class DatabaseManager {
         try {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
 
-            final Kingdom schemaKingdom = new Kingdom("BetterKingdoms");
+            final Kingdom schemaKingdom = new Kingdom("BetterKingdoms", new Location(Bukkit.getWorlds().get(0), 0, 0, 0));
             schemaKingdom.save();
 
             final KingdomUser schemaUser = new KingdomUser(UUID.fromString("00000000-0000-0000-0000-000000000000"));
@@ -154,7 +152,7 @@ public class DatabaseManager {
     public final KingdomUser loadUser(final UUID uuid) {
         BetterLogger.debug("Loading user " + uuid);
 
-        final KingdomUser foundKingdomUser = new QKingdomUser().playeruuid.equalTo(uuid).findOne();
+        final KingdomUser foundKingdomUser = new QKingdomUser().playerUuid.equalTo(uuid).findOne();
 
         if (foundKingdomUser == null) {
             BetterLogger.debug("Tried to load an non-existing user with name " + Bukkit.getOfflinePlayer(uuid).getName());
@@ -176,7 +174,7 @@ public class DatabaseManager {
             }
 
             for(final KingdomUser user : BetterKingdoms.getInstance().getKingdomManager().getAllLoadedUsers()) {
-                BetterLogger.debug("Saving user: " + Bukkit.getOfflinePlayer(user.getPlayeruuid()).getName());
+                BetterLogger.debug("Saving user: " + Bukkit.getOfflinePlayer(user.getPlayerUuid()).getName());
                 user.save();
             }
             transaction.commit();

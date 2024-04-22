@@ -3,6 +3,7 @@ package dev.isnow.betterkingdoms.kingdoms.impl.model;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import io.ebean.annotation.NotNull;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -17,17 +18,18 @@ import java.util.UUID;
 @Getter@Setter
 public class KingdomUser extends BaseKingdom {
 
-    @NotNull
-    private UUID playeruuid;
+    @NotNull @Column(unique = true, name = "playeruuid")
+    private UUID playerUuid;
 
-    @ManyToOne
-    private Kingdom attachedkingdom;
+    @ManyToOne @Column(name = "attachedkingdom")
+    private Kingdom attachedKingdom;
 
+    @Column(name = "kingdomrank")
     private KingdomRank kingdomRank;
 
     public KingdomUser(final UUID playerUUID) {
-        this.playeruuid = playerUUID;
-        this.attachedkingdom = null;
-        this.kingdomRank = KingdomRank.MEMBER;
+        this.playerUuid = playerUUID;
+        this.attachedKingdom = null;
+        this.kingdomRank = null;
     }
 }

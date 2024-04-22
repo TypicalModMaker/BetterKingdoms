@@ -7,9 +7,9 @@ import pl.mikigal.config.annotation.ConfigName;
 public interface CommandsConfig extends Config {
     default CommandNames getCommandNames() {
         return new CommandNames("pomoc",
-                "zaloz",
+                "zaloz", "<Nazwa Królestwa>",
                 "zajmij",
-                "porzuc",
+                "rozwiaz", "<Nazwa Królestwa>",
                 "krol",
                 "opis",
                 "manualsave");
