@@ -1,25 +1,37 @@
 package dev.isnow.betterkingdoms.database;
 
 import dev.isnow.betterkingdoms.BetterKingdoms;
+import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomUser;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
+import io.avaje.applog.AppLog;
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
 import io.ebean.Transaction;
+import io.ebean.annotation.Platform;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
+import io.ebean.dbmigration.DbMigration;
+import io.ebean.migration.MigrationConfig;
+import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
 @Getter
 public class DatabaseManager {
+
+    public static final int SCHEMA_VERSION = 2;
 
     private final Database db;
 
@@ -27,19 +39,28 @@ public class DatabaseManager {
 
         Database db = null;
 
-        final DataSourceConfig dataSourceConfig = getDataSourceConfig(plugin);
+        final dev.isnow.betterkingdoms.config.impl.database.Database authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig().getDatabase();
+        final DataSourceConfig dataSourceConfig = getDataSourceConfig(plugin, authConfig);
 
-        final DatabaseConfig config = new DatabaseConfig();
-        config.setDataSourceConfig(dataSourceConfig);
-        config.setName("db");
+        final MasterConfig masterConfig = BetterKingdoms.getInstance().getConfigManager().getMasterConfig();
+        final DatabaseConfig config = getDatabaseConfig(dataSourceConfig, masterConfig);
 
-        // Generate tables
-        if(BetterKingdoms.getInstance().getConfigManager().getMasterConfig().getFirstRun()) {
-            config.ddlGenerate(true);
-            config.ddlRun(true);
+        if(masterConfig.getFirstRun()) {
+            generateMigration(authConfig.getDatabaseType(), plugin, true);
+        } else if(SCHEMA_VERSION > masterConfig.getCurrentSchema()) {
+            BetterLogger.info("Schema version changed! BetterKingdoms will migrate the database automatically.");
+            generateMigration(authConfig.getDatabaseType(), plugin, false);
+
+            final MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.setDbUsername(authConfig.getUsername());
+            migrationConfig.setDbPassword(authConfig.getPassword());
+            migrationConfig.setDbUrl(getUrl(plugin, authConfig));
+            migrationConfig.setMigrationPath("filesystem:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "do_not_delete_databaseMigrations");
+
+            BetterLogger.info("Running Migrator...");
+            MigrationRunner runner = new MigrationRunner(migrationConfig);
+            runner.run();
         }
-
-        // Test Connection
         try {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
 
@@ -48,31 +69,74 @@ public class DatabaseManager {
 
             final KingdomUser schemaUser = new KingdomUser(UUID.fromString("00000000-0000-0000-0000-000000000000"));
             schemaUser.save();
+
+            // Successfully migrated
+            masterConfig.setCurrentSchema(SCHEMA_VERSION);
+
         } catch (final Exception e) {
-            // Table generation script
-            if(!e.toString().contains("Failed to run script")) {
-                e.printStackTrace();
-            } else {
-                db = null;
-            }
+            e.printStackTrace();
+            db = null;
         }
 
         this.db = db;
     }
 
-    private DataSourceConfig getDataSourceConfig(BetterKingdoms plugin) {
+    private void generateMigration(final Platform platform, final BetterKingdoms plugin, final boolean initial) {
+        DbMigration dbMigration = DbMigration.create();
+        dbMigration.setPlatform(platform);
+        dbMigration.setMigrationPath("do_not_delete_databaseMigrations");
+        dbMigration.setPathToResources(plugin.getDataFolder().getAbsolutePath());
+        dbMigration.setStrictMode(false);
+        dbMigration.setApplyPrefix("V");
+        if(initial) {
+            dbMigration.setName("initial");
+        }
+
+        try {
+            dbMigration.generateMigration();
+        } catch (IOException e) {
+            BetterLogger.error("Failed to generate migration script! Contact BetterKingdoms Developer");
+            e.printStackTrace();
+        }
+    }
+    private DatabaseConfig getDatabaseConfig(final DataSourceConfig dataSourceConfig, final MasterConfig masterConfig) {
+        final DatabaseConfig config = new DatabaseConfig();
+        config.setDataSourceConfig(dataSourceConfig);
+        config.setName("db");
+
+        // Generate tables
+        if(masterConfig.getFirstRun()) {
+            config.ddlGenerate(true);
+            config.ddlRun(true);
+
+        }
+
+        return config;
+    }
+
+    private DataSourceConfig getDataSourceConfig(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.Database authConfig) {
         final DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        dev.isnow.betterkingdoms.config.impl.database.Database authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig().getDatabase();
 
         dataSourceConfig.setUsername(authConfig.getUsername());
         dataSourceConfig.setPassword(authConfig.getPassword());
+        dataSourceConfig.setUrl(getUrl(plugin, authConfig));
+
+        return dataSourceConfig;
+    }
+
+    private String getUrl(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.Database authConfig) {
         switch (authConfig.getDatabaseType()) {
-            case MYSQL -> dataSourceConfig.setUrl("jdbc:mysql://" + authConfig.getIp() + "/" + authConfig.getDatabaseName());
-            case MARIADB -> dataSourceConfig.setUrl("jdbc:mariadb://" + authConfig.getIp() + "/" + authConfig.getDatabaseName() + "?useLegacyDatetimeCode=false");
-            case H2 -> dataSourceConfig.setUrl("jdbc:h2:file:" + plugin.getDataFolder().getAbsolutePath() + "/" + authConfig.getDatabaseName());
+            case MYSQL -> {
+                return "jdbc:mysql://" + authConfig.getIp() + "/" + authConfig.getDatabaseName();
+            }
+            case MARIADB -> {
+                return "jdbc:mariadb://" + authConfig.getIp() + "/" + authConfig.getDatabaseName() + "?useLegacyDatetimeCode=false";
+            }
+            case H2 -> {
+                return "jdbc:h2:file:" + plugin.getDataFolder().getAbsolutePath() + "/" + authConfig.getDatabaseName();
+            }
             default -> throw new NotImplementedException();
         }
-        return dataSourceConfig;
     }
 
     public final Kingdom loadKingdom(final String name) {
@@ -125,7 +189,7 @@ public class DatabaseManager {
     }
 
     public final void saveUser(final UUID uuid) {
-        saveUser(uuid, true);
+        saveUser(uuid, false);
     }
 
     public final void saveUser(final UUID uuid, final boolean remove) {

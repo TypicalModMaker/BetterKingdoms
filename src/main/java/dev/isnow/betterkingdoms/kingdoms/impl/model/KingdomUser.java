@@ -25,7 +25,6 @@ public class KingdomUser extends BaseKingdom {
 
     private KingdomRank kingdomRank;
 
-
     public KingdomUser(final UUID playerUUID) {
         this.playeruuid = playerUUID;
         this.attachedkingdom = null;

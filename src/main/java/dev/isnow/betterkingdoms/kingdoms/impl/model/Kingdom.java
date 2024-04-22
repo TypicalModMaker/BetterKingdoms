@@ -23,12 +23,19 @@ public class Kingdom extends BaseKingdom {
     @NotNull @Length(30)
     private String name;
 
+    private String description;
+
+    private long resourcePoints;
+
+
     @OneToMany(mappedBy = "attachedkingdom")
     private List<KingdomUser> members;
 
     public Kingdom(final String name) {
         this.name = name;
         this.members = new ArrayList<>();
+        this.description = "";
+        this.resourcePoints = 0;
     }
 
     public void addMember(final KingdomUser user, final KingdomRank rank) {

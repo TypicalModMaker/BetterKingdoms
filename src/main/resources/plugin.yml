@@ -5,6 +5,8 @@ api-version: '1.20'
 author: '5170'
 description: Kingdoms Plugin
 website: https://github.com/TypicalModMaker/BetterKingdoms
+softdepend:
+  - PlaceholderAPI
 libraries:
   - io.ebean:ebean:14.1.0
   - io.ebean:ebean-ddl-generator:14.1.0

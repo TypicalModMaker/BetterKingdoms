@@ -4,8 +4,8 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandsConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
-import dev.isnow.betterkingdoms.config.impl.database.DatabaseType;
-import dev.isnow.betterkingdoms.config.impl.database.DatabaseTypeSerializer;
+import dev.isnow.betterkingdoms.config.impl.database.PlatformSerializer;
+import io.ebean.annotation.Platform;
 import lombok.Getter;
 import pl.mikigal.config.Config;
 import pl.mikigal.config.ConfigAPI;
@@ -20,7 +20,7 @@ public class ConfigManager {
 
     public ConfigManager(BetterKingdoms plugin) {
         // Another api issue...
-        ConfigAPI.registerSerializer(DatabaseType.class, new DatabaseTypeSerializer());
+        ConfigAPI.registerSerializer(Platform.class, new PlatformSerializer());
 
         masterConfig = (MasterConfig) init(MasterConfig.class, true, plugin);
         databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, false, plugin);

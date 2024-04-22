@@ -82,7 +82,7 @@ public class KingdomsCommand extends BaseCommand {
         player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
     }
 
-    @Subcommand("%manualsave")
+    @Subcommand("admin %manualsave")
     @CommandPermission("betterkingdoms.admin.manualsave")
     public void databaseSave(Player player) {
         BetterKingdoms.getInstance().getThreadPool().submit(BetterKingdoms.getInstance().getDatabaseManager()::saveAllKingdoms);

@@ -112,6 +112,10 @@
         <id>mikigal-repo</id>
         <url>https://repo.mikigal.pl/releases</url>
       </repository>
+      <repository>
+        <id>placeholderapi</id>
+        <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -149,6 +153,12 @@
         <artifactId>ConfigAPI</artifactId>
         <version>1.2.5-BETA</version>
         <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>me.clip</groupId>
+        <artifactId>placeholderapi</artifactId>
+        <version>2.11.5</version>
+        <scope>provided</scope>
       </dependency>
   </dependencies>
 </project>

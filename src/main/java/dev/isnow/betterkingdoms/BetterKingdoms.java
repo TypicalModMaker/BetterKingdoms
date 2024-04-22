@@ -62,7 +62,7 @@ public final class BetterKingdoms extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(BetterKingdoms.getInstance());
             return;
         } else {
-            BetterLogger.info("Connection passed successfully.");
+            BetterLogger.info("Connected successfully.");
             configManager.getMasterConfig().setFirstRun(false);
         }
 
