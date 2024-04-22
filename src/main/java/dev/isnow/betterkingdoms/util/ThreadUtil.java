@@ -22,13 +22,6 @@ public class ThreadUtil {
         kingdom.thenAccept(action);
     }
 
-    public void saveUserAsync(final UUID uuid, final boolean remove) {
-        CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getThreadPool().submit(() -> BetterKingdoms.getInstance().getDatabaseManager().saveUser(uuid, remove)), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
-            BetterLogger.error("Failed to save user: " + ex.toString());
-            return null;
-        });
-    }
-
     public void saveKingdomAsync(final Kingdom kingdom, Consumer<Void> action) {
 
         final CompletableFuture<Void> kingdomTask = CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getDatabaseManager().saveKingdom(kingdom), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
@@ -40,6 +33,26 @@ public class ThreadUtil {
             kingdomTask.thenAccept(action);
         }
 
+    }
+
+    public void deleteKingdomAsync(final Kingdom kingdom, Consumer<Void> action) {
+
+        final CompletableFuture<Void> kingdomTask = CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getKingdomManager().deleteKingdom(kingdom), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
+            BetterLogger.error("Failed to delete kingdom: " + ex.toString());
+            return null;
+        });
+
+        if(action != null) {
+            kingdomTask.thenAccept(action);
+        }
+
+    }
+
+    public void saveUserAsync(final UUID uuid, final boolean remove) {
+        CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getThreadPool().submit(() -> BetterKingdoms.getInstance().getDatabaseManager().saveUser(uuid, remove)), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
+            BetterLogger.error("Failed to save user: " + ex.toString());
+            return null;
+        });
     }
 
     public void loadUserAsync(final UUID uuid, Consumer<KingdomUser> action) {

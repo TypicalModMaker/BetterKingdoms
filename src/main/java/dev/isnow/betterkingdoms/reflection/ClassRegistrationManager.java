@@ -2,7 +2,6 @@ package dev.isnow.betterkingdoms.reflection;
 
 import com.google.common.collect.ImmutableSet;
 import dev.isnow.betterkingdoms.BetterKingdoms;
-import io.ebean.annotation.Platform;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

@@ -15,8 +15,11 @@ public class CommandNames implements Serializable {
     private String claim;
     private String disband, disband_admin_tab_completion;
     private String king;
-    private String description;
+    private String accept;
+    private String invite;
+    private String description, description_tab_completion;
     private String manualsave;
+
 
     public CommandNames() {} // Config system stuff
 }

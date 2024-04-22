@@ -46,8 +46,13 @@ public class KingdomManager {
             final KingdomUser kingdomUser = user.get();
 
             final Kingdom attachedKingdom = kingdomUser.getAttachedKingdom();
-            if (attachedKingdom != null && !attachedKingdom.anyMemberOnline(kingdomUser.getPlayerUuid())) {
-                removeKingdom(attachedKingdom, false);
+            if(attachedKingdom != null) {
+                final boolean anyMemberOnline = attachedKingdom.anyMemberOnline(kingdomUser.getPlayerUuid());
+
+                BetterLogger.debug("AnyoneOnline: " + anyMemberOnline);
+                if (!anyMemberOnline) {
+                    removeKingdom(attachedKingdom, false);
+                }
             }
         }
 
@@ -110,6 +115,12 @@ public class KingdomManager {
         }
 
         return kingdom;
+    }
+
+    public final void deleteKingdom(final Kingdom kingdom) {
+        kingdom.deleteKingdom();
+        kingdoms.remove(kingdom.getName());
+
     }
 
     public final Collection<Kingdom> getAllLoadedKingdoms() {

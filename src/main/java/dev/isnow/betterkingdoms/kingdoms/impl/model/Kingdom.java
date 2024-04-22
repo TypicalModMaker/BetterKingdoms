@@ -6,25 +6,22 @@ import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import io.ebean.annotation.Length;
 import io.ebean.annotation.NotNull;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "betterkingdoms_kingdom")
 @Getter@Setter
 public class Kingdom extends BaseKingdom {
-    @NotNull @Length(30) @Column(name = "name")
+    @NotNull @Length(30) @Column(unique = true, name = "name")
     private String name;
 
     @Column(name = "description")
@@ -38,6 +35,9 @@ public class Kingdom extends BaseKingdom {
 
     @OneToMany(mappedBy = "attachedKingdom")
     private List<KingdomUser> members;
+
+    @Transient
+    private List<KingdomUser> pendingInvites = new ArrayList<>();
 
     public Kingdom(final String name, final Location nexusLocation) {
         this.name = name;
@@ -55,12 +55,33 @@ public class Kingdom extends BaseKingdom {
         user.setKingdomRank(rank);
     }
 
+    public void deleteKingdom() {
+        for(final KingdomUser user : members) {
+            user.setAttachedKingdom(null);
+            user.setKingdomRank(null);
+        }
+
+        for(KingdomUser user : pendingInvites) {
+            user.setKingdomInvite(null);
+        }
+
+        // TODO: FIX
+        nexusLocation.getBlock().setType(Material.AIR);
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted") // Possible usage in future
-    public boolean anyMemberOnline(final UUID exception) {
-        return members.stream().anyMatch(kingdomUser -> {
-            if(exception != null && kingdomUser.getPlayerUuid() == exception) return false;
-            final Player member = Bukkit.getPlayer(kingdomUser.getPlayerUuid());
-            return member == null || !member.isOnline();
+    public boolean anyMemberOnline(UUID exception) {
+        Set<UUID> onlinePlayerUuids = Bukkit.getOnlinePlayers().stream()
+                .map(Player::getUniqueId)
+                .collect(Collectors.toSet());
+
+        return members.stream().anyMatch(member -> {
+            UUID playerUuid = member.getPlayerUuid();
+            if (playerUuid.equals(exception)) {
+                return false; // Excluded member
+            }
+
+            return !onlinePlayerUuids.contains(playerUuid);
         });
     }
 }

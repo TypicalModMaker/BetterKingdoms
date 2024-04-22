@@ -4,7 +4,6 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandsConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
-import dev.isnow.betterkingdoms.config.impl.database.PlatformSerializer;
 import dev.isnow.betterkingdoms.config.impl.kingdom.KingdomConfig;
 import io.ebean.annotation.Platform;
 import lombok.Getter;
@@ -15,15 +14,20 @@ import pl.mikigal.config.style.NameStyle;
 
 @Getter
 public class ConfigManager {
-    private final MasterConfig masterConfig;
-    private final DatabaseConfig databaseConfig;
-    private final CommandsConfig commandsConfig;
-    private final KingdomConfig kingdomConfig;
+    private MasterConfig masterConfig;
+    private DatabaseConfig databaseConfig;
+    private CommandsConfig commandsConfig;
+    private KingdomConfig kingdomConfig;
 
-    public ConfigManager(BetterKingdoms plugin) {
-        // Another api issue...
-        ConfigAPI.registerSerializer(Platform.class, new PlatformSerializer());
+    public ConfigManager(final BetterKingdoms plugin) {
+        load(plugin);
+    }
 
+    public void reloadConfigs() {
+        load(BetterKingdoms.getInstance());
+    }
+
+    private void load(final BetterKingdoms plugin) {
         masterConfig = (MasterConfig) init(MasterConfig.class, true, plugin);
         databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, false, plugin);
         commandsConfig = (CommandsConfig) init(CommandsConfig.class, true, plugin);
@@ -39,4 +43,5 @@ public class ConfigManager {
                 plugin
         );
     }
+
 }

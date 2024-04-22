@@ -3,13 +3,11 @@ package dev.isnow.betterkingdoms.kingdoms.impl.model;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import io.ebean.annotation.NotNull;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 
@@ -26,6 +24,9 @@ public class KingdomUser extends BaseKingdom {
 
     @Column(name = "kingdomrank")
     private KingdomRank kingdomRank;
+
+    @Transient
+    private Kingdom kingdomInvite;
 
     public KingdomUser(final UUID playerUUID) {
         this.playerUuid = playerUUID;

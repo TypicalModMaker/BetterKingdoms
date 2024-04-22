@@ -1,11 +1,10 @@
 package dev.isnow.betterkingdoms.config.impl;
 
+import dev.isnow.betterkingdoms.database.DatabaseManager;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import pl.mikigal.config.Config;
 import pl.mikigal.config.annotation.Comment;
 import pl.mikigal.config.annotation.ConfigName;
-
-import dev.isnow.betterkingdoms.database.DatabaseManager;
 
 @ConfigName("config.yml")
 public interface MasterConfig extends Config {

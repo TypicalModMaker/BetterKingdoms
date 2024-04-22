@@ -62,15 +62,8 @@ public class DatabaseManager {
         try {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
 
-            final Kingdom schemaKingdom = new Kingdom("BetterKingdoms", new Location(Bukkit.getWorlds().get(0), 0, 0, 0));
-            schemaKingdom.save();
-
-            final KingdomUser schemaUser = new KingdomUser(UUID.fromString("00000000-0000-0000-0000-000000000000"));
-            schemaUser.save();
-
             // Successfully migrated
             masterConfig.setCurrentSchema(SCHEMA_VERSION);
-
         } catch (final Exception e) {
             e.printStackTrace();
             db = null;
@@ -135,6 +128,12 @@ public class DatabaseManager {
             }
             default -> throw new NotImplementedException();
         }
+    }
+
+    public void shutdown() {
+        BetterLogger.info("Shutting down the database connection.");
+
+        db.shutdown();
     }
 
     public final Kingdom loadKingdom(final String name) {
@@ -212,10 +211,11 @@ public class DatabaseManager {
         db.save(kingdom);
     }
 
-    public void shutdown() {
-        BetterLogger.info("Shutting down the database connection.");
 
-        db.shutdown();
+    public final void deleteKingdom(final Kingdom kingdom) {
+        BetterLogger.debug("deleting kingdom " + kingdom.getName());
+
+        kingdom.deletePermanent();
     }
 
 }

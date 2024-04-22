@@ -80,6 +80,9 @@ public final class BetterKingdoms extends JavaPlugin {
     public void onDisable() {
         BetterLogger.watermark();
 
+        BetterLogger.info("Unloading commands");
+        commandsManager.unload();
+
         if(databaseManager.getDb() != null) {
             databaseManager.saveAllKingdoms();
             databaseManager.shutdown();
