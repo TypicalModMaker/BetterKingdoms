@@ -5,7 +5,6 @@ import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandsConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
 import dev.isnow.betterkingdoms.config.impl.kingdom.KingdomConfig;
-import io.ebean.annotation.Platform;
 import lombok.Getter;
 import pl.mikigal.config.Config;
 import pl.mikigal.config.ConfigAPI;

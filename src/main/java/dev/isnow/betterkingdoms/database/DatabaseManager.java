@@ -19,7 +19,6 @@ import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 import java.io.File;
 import java.io.IOException;
