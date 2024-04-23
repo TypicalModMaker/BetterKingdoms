@@ -6,6 +6,7 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomUser;
+import dev.isnow.betterkingdoms.util.FileUtil;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import io.ebean.Database;
 import io.ebean.DatabaseFactory;
@@ -15,6 +16,7 @@ import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.dbmigration.DbMigration;
 import io.ebean.migration.MigrationConfig;
+import io.ebean.migration.MigrationContext;
 import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
@@ -28,7 +30,7 @@ import java.util.UUID;
 @Getter
 public class DatabaseManager {
 
-    public static final int SCHEMA_VERSION = 3;
+    public static final int SCHEMA_VERSION = 8;
 
     private final Database db;
 
@@ -42,17 +44,24 @@ public class DatabaseManager {
         final MasterConfig masterConfig = BetterKingdoms.getInstance().getConfigManager().getMasterConfig();
         final DatabaseConfig config = getDatabaseConfig(dataSourceConfig, masterConfig);
 
-        if(masterConfig.getFirstRun()) {
-            generateMigration(authConfig.getDatabaseType(), plugin, true);
+        final String dataPath = plugin.getDataFolder().getAbsolutePath() + File.separator + "do_not_delete_databaseMigrations";
+
+        final boolean firstRun = masterConfig.getFirstRun();
+
+        if(firstRun) {
+            generateMigration(authConfig.getDatabaseType(), plugin);
         } else if(SCHEMA_VERSION > masterConfig.getCurrentSchema()) {
             BetterLogger.info("Schema version changed! BetterKingdoms will migrate the database automatically.");
-            generateMigration(authConfig.getDatabaseType(), plugin, false);
+            generateMigration(authConfig.getDatabaseType(), plugin);
 
             final MigrationConfig migrationConfig = new MigrationConfig();
             migrationConfig.setDbUsername(authConfig.getUsername());
+            migrationConfig.setAllowErrorInRepeatable(true);
             migrationConfig.setDbPassword(authConfig.getPassword());
             migrationConfig.setDbUrl(getUrl(plugin, authConfig));
-            migrationConfig.setMigrationPath("filesystem:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "do_not_delete_databaseMigrations");
+            migrationConfig.setMigrationPath("filesystem:" + dataPath);
+
+            FileUtil.getOldestFile(new File(dataPath)).ifPresent(File::delete);
 
             BetterLogger.info("Running Migrator...");
             MigrationRunner runner = new MigrationRunner(migrationConfig);
@@ -62,7 +71,9 @@ public class DatabaseManager {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
 
             // Successfully migrated
-            masterConfig.setCurrentSchema(SCHEMA_VERSION);
+            if(!firstRun) {
+                masterConfig.setCurrentSchema(SCHEMA_VERSION);
+            }
         } catch (final Exception e) {
             e.printStackTrace();
             db = null;
@@ -71,17 +82,13 @@ public class DatabaseManager {
         this.db = db;
     }
 
-    private void generateMigration(final Platform platform, final BetterKingdoms plugin, final boolean initial) {
+    private void generateMigration(final Platform platform, final BetterKingdoms plugin) {
         DbMigration dbMigration = DbMigration.create();
         dbMigration.setPlatform(platform);
         dbMigration.setMigrationPath("do_not_delete_databaseMigrations");
         dbMigration.setPathToResources(plugin.getDataFolder().getAbsolutePath());
         dbMigration.setStrictMode(false);
         dbMigration.setApplyPrefix("V");
-        if(initial) {
-            dbMigration.setName("initial");
-        }
-
         try {
             dbMigration.generateMigration();
         } catch (IOException e) {

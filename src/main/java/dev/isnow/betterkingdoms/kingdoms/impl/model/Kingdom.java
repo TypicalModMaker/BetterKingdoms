@@ -33,7 +33,7 @@ public class Kingdom extends BaseKingdom {
     @Column(name = "resourcepoints")
     private long resourcePoints;
 
-    @NotNull @JsonIgnoreProperties({"pitch", "yaw"}) @Column(name = "nexuslocation")
+    @NotNull @Column(name = "nexuslocation")
     private Location nexusLocation;
 
     @OneToMany(mappedBy = "attachedKingdom")
