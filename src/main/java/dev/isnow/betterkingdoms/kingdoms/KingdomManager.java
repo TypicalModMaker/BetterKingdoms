@@ -15,6 +15,9 @@ public class KingdomManager {
 
     private final Map<UUID, KingdomUser> kingdomUsers = new HashMap<>();
 
+    public double nexusBlockHeight = 1;
+
+
     public final void addUser(final KingdomUser user) {
         kingdomUsers.put(user.getPlayerUuid(), user);
 

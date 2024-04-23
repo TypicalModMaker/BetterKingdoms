@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
+import dev.isnow.betterkingdoms.util.converter.AdvancedLocationConverter;
 import dev.isnow.betterkingdoms.util.converter.LocationConverter;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import io.ebean.Transaction;
@@ -40,6 +41,9 @@ public class Kingdom extends BaseKingdom {
     @NotNull @Column(name = "nexuslocation") @Convert(converter = LocationConverter.class)
     private Location nexusLocation;
 
+    @NotNull @Column(name = "homelocation") @Convert(converter = AdvancedLocationConverter.class)
+    private Location homeLocation;
+
     @OneToMany(mappedBy = "attachedKingdom", cascade = CascadeType.ALL)
     private List<KingdomUser> members;
 
@@ -52,6 +56,7 @@ public class Kingdom extends BaseKingdom {
         this.description = "";
         this.resourcePoints = 0;
         this.nexusLocation = nexusLocation;
+        this.homeLocation = nexusLocation.clone().add(0, BetterKingdoms.getInstance().getKingdomManager().nexusBlockHeight, 1);
 
         nexusLocation.getBlock().setType(BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getNexusBlock());
     }

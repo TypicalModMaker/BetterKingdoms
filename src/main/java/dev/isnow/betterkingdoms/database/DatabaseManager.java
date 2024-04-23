@@ -30,7 +30,7 @@ import java.util.UUID;
 @Getter
 public class DatabaseManager {
 
-    public static final int SCHEMA_VERSION = 9;
+    public static final int SCHEMA_VERSION = 10;
 
     private final Database db;
 

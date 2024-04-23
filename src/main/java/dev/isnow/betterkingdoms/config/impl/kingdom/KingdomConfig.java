@@ -10,5 +10,6 @@ public interface KingdomConfig extends Config {
         return Material.CAMPFIRE;
     }
 
+    default int getMaximumDescriptionLength() { return 30; }
 
 }
