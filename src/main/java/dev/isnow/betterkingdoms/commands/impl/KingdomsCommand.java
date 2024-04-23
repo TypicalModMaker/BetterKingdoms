@@ -58,7 +58,7 @@ public class KingdomsCommand extends BaseCommand {
         blockLocation.setYaw(player.getYaw());
 
         if(blockLocation.getBlock().getType() != Material.AIR) {
-            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCantPlaceNexus(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_y%", blockLocation.getBlockZ()));
+            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCantPlaceNexus(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x%", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_z%", blockLocation.getBlockZ()));
             return;
         }
 
@@ -70,7 +70,7 @@ public class KingdomsCommand extends BaseCommand {
 
         ThreadUtil.saveKingdomAsync(kingdom, null);
 
-        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCreatedKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_y%", blockLocation.getBlockZ()));
+        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCreatedKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x%", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_z%", blockLocation.getBlockZ()));
     }
 
     @Subcommand("%claim")
@@ -104,7 +104,7 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-        ThreadUtil.deleteKingdomAsync(attachedKingdom, __ -> player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntOwnKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName())));
+        ThreadUtil.deleteKingdomAsync(attachedKingdom, __ -> player.sendMessage(ComponentUtil.deserialize(messagesConfig.getKingdomDeleted(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName())));
     }
 
     @Subcommand("%king")
@@ -310,7 +310,7 @@ public class KingdomsCommand extends BaseCommand {
 
         player.teleport(homeLocation);
 
-        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getTeleportedToHome(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%home_full_location%", ComponentUtil.formatLocation(homeLocation, true), "%home_short_location%", ComponentUtil.formatLocation(homeLocation, false), "%home_location_x", homeLocation.getBlockX(), "%home_location_y%", homeLocation.getBlockY(), "%home_location_y%", homeLocation.getBlockZ()));
+        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getTeleportedToHome(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%home_full_location%", ComponentUtil.formatLocation(homeLocation, true), "%home_short_location%", ComponentUtil.formatLocation(homeLocation, false), "%home_location_x%", homeLocation.getBlockX(), "%home_location_y%", homeLocation.getBlockY(), "%home_location_z%", homeLocation.getBlockZ()));
     }
 
     @Subcommand("%sethome")
@@ -336,14 +336,14 @@ public class KingdomsCommand extends BaseCommand {
         final Location playerLocation = player.getLocation().clone();
 
         if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
-            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoRightsToSetHome(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%player_kingdom_rank%", ComponentUtil.getTranslationForRank(kUser.getKingdomRank()), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_y%", playerLocation.getBlockZ()));
+            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoRightsToSetHome(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%player_kingdom_rank%", ComponentUtil.getTranslationForRank(kUser.getKingdomRank()), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x%", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_z%", playerLocation.getBlockZ()));
             return;
         }
 
         attachedKingdom.setHomeLocation(playerLocation);
 
         final String location = playerLocation.getBlockX() + ", " + playerLocation.getBlockY();
-        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getSuccessfullySetNewHomeLocation(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_y%", playerLocation.getBlockZ()));
+        player.sendMessage(ComponentUtil.deserialize(messagesConfig.getSuccessfullySetNewHomeLocation(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x%", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_z%", playerLocation.getBlockZ()));
     }
 
     @Subcommand("admin %manualsave")
