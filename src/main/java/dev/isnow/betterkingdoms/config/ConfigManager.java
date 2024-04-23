@@ -6,6 +6,7 @@ import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
 import dev.isnow.betterkingdoms.config.impl.kingdom.KingdomConfig;
+import dev.isnow.betterkingdoms.config.impl.messages.MessagesConfig;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
 
@@ -20,6 +21,7 @@ public class ConfigManager {
     private DatabaseConfig databaseConfig;
     private CommandConfig commandsConfig;
     private KingdomConfig kingdomConfig;
+    private MessagesConfig messagesConfig;
 
     public ConfigManager(final BetterKingdoms plugin) {
         load(plugin);
@@ -36,6 +38,7 @@ public class ConfigManager {
         save(DatabaseConfig.class, databaseConfig, "database", plugin);
         save(CommandConfig.class, commandsConfig, "commands", plugin);
         save(KingdomConfig.class, kingdomConfig,"kingdom", plugin);
+        save(MessagesConfig.class, messagesConfig,"messages", plugin);
     }
 
     private void load(final BetterKingdoms plugin) {
@@ -43,6 +46,7 @@ public class ConfigManager {
         databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, "database", plugin);
         commandsConfig = (CommandConfig) init(CommandConfig.class, "commands", plugin);
         kingdomConfig = (KingdomConfig) init(KingdomConfig.class, "kingdom", plugin);
+        messagesConfig = (MessagesConfig) init(MessagesConfig.class, "messages", plugin);
     }
 
     private <T> Object init(final Class<T> clazz, final String name, final BetterKingdoms plugin) {
@@ -50,10 +54,11 @@ public class ConfigManager {
 
         if (!configFile.toFile().exists()) {
             try {
-                Constructor<T> constructor = clazz.getDeclaredConstructor();
+                final Constructor<T> constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 T newConfig = constructor.newInstance();
-                YamlConfigurations.save(configFile, clazz, newConfig);
+
+                save(clazz, newConfig, name, plugin);
             } catch (Exception e) {
                 BetterLogger.error("Failed to save default config: " + e);
             }

@@ -21,5 +21,6 @@ public class CommandConfig {
     String description = "opis|description|lore", description_tab_completion = "<Opis_Królestwa>";
     String home = "dom|home";
     String sethome = "ustawdom|sethome";
+    String leave = "opusc|leave";
     String manualsave = "manualsave";
 }

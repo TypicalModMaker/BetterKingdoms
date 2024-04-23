@@ -13,4 +13,10 @@ import org.bukkit.Material;
 public class KingdomConfig{
     Material nexusMaterial = Material.CAMPFIRE;
     int maximumDescriptionLength = 30;
+
+    String ownerName = "Właściciel";
+    String coownerName = "Współwłaściciel";
+    String officerName = "Generał";
+    String knightName = "Rycerz";
+    String memberName = "Członek";
 }
