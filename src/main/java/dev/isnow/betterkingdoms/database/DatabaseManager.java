@@ -16,7 +16,6 @@ import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.ebean.dbmigration.DbMigration;
 import io.ebean.migration.MigrationConfig;
-import io.ebean.migration.MigrationContext;
 import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;

@@ -2,7 +2,6 @@ package dev.isnow.betterkingdoms.kingdoms.impl.model;
 
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
-import io.ebean.annotation.Length;
 import io.ebean.annotation.NotNull;
 import jakarta.persistence.*;
 import lombok.Getter;

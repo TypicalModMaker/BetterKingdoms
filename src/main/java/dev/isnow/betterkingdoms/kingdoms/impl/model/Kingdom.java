@@ -1,6 +1,5 @@
 package dev.isnow.betterkingdoms.kingdoms.impl.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
