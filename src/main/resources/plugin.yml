@@ -14,3 +14,4 @@ libraries:
   - org.mariadb.jdbc:mariadb-java-client:3.3.3
   - com.h2database:h2:2.2.224
   - com.mysql:mysql-connector-j:8.3.0
+  - de.exlll:configlib-paper:4.5.0

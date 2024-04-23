@@ -57,7 +57,7 @@ public class Kingdom extends BaseKingdom {
         this.nexusLocation = nexusLocation;
         this.homeLocation = nexusLocation.clone().add(0.5, BetterKingdoms.getInstance().getKingdomManager().nexusBlockHeight, 1.5);
 
-        nexusLocation.getBlock().setType(BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getNexusBlock());
+        nexusLocation.getBlock().setType(BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getNexusMaterial());
     }
 
     public void addMember(final KingdomUser user, final KingdomRank rank) {

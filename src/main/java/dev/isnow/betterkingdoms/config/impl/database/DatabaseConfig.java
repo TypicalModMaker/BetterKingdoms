@@ -1,14 +1,21 @@
 package dev.isnow.betterkingdoms.config.impl.database;
 
+import de.exlll.configlib.Configuration;
 import io.ebean.annotation.Platform;
-import pl.mikigal.config.Config;
-import pl.mikigal.config.annotation.ConfigName;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@ConfigName("database.yml")
-public interface DatabaseConfig extends Config {
-    default Database getDatabase() {
-        return new Database("127.0.0.1", "sa", "", "betterkingdoms", Platform.H2);
-    }
+@Getter
+@Setter
+@RequiredArgsConstructor
+@Configuration
+public class DatabaseConfig {
 
-    default long getDatabaseAutoSaveInterval() { return 900; }
+    String ip = "127.0.0.1";
+    String username = "sa";
+    String password = "";
+    String databaseName = "BetterKingdoms";
+    Platform databaseType = Platform.H2;
+    int autoSaveInterval = 900;
 }

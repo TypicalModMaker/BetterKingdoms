@@ -37,6 +37,8 @@ public final class BetterKingdoms extends JavaPlugin {
 
     private ExecutorService threadPool;
 
+    private boolean usePlaceholderAPI;
+
     @Override
     public void onEnable() {
         final long startTime = System.currentTimeMillis();
@@ -74,18 +76,19 @@ public final class BetterKingdoms extends JavaPlugin {
             configManager.getMasterConfig().setFirstRun(false);
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        usePlaceholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        if (usePlaceholderAPI) {
             BetterLogger.info("Registering PlaceholderAPI hook");
             new BetterKingdomsExpansion().register();
         }
 
-        BetterLogger.info("Getting nexus block height offset...");
+        BetterLogger.info("Getting nexus block height offset");
         final World testWorld = Bukkit.getWorlds().get(0);
         testWorld.loadChunk(0, 0, true);
         final Block block = testWorld.getHighestBlockAt(0, 0);
         block.getChunk().setForceLoaded(true);
         final Material oldMaterial = block.getType();
-        block.setType(configManager.getKingdomConfig().getNexusBlock());
+        block.setType(configManager.getKingdomConfig().getNexusMaterial());
 
         final Entity testEntity = testWorld.spawnEntity(block.getLocation().clone().add(0.5, 1, 0.5), EntityType.VILLAGER);
         testEntity.setInvulnerable(true);
@@ -104,9 +107,10 @@ public final class BetterKingdoms extends JavaPlugin {
                 block.getChunk().setForceLoaded(false);
                 testWorld.unloadChunkRequest(0, 0);
             }
-        }.runTaskLater(this, 100);
+        }.runTaskLater(this, 60);
 
-        final long autoSaveInterval = configManager.getDatabaseConfig().getDatabaseAutoSaveInterval();
+        BetterLogger.info("Starting database autosave system");
+        final int autoSaveInterval = configManager.getDatabaseConfig().getAutoSaveInterval() * 20;
         new DatabaseRunnable().runTaskTimerAsynchronously(this, autoSaveInterval, autoSaveInterval);
 
         final String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));

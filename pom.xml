@@ -149,10 +149,10 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>pl.mikigal</groupId>
-        <artifactId>ConfigAPI</artifactId>
-        <version>1.2.6</version>
-        <scope>compile</scope>
+        <groupId>de.exlll</groupId>
+        <artifactId>configlib-paper</artifactId>
+        <version>4.5.0</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>me.clip</groupId>

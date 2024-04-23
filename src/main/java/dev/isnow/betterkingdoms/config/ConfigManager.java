@@ -1,21 +1,24 @@
 package dev.isnow.betterkingdoms.config;
 
+import de.exlll.configlib.YamlConfigurations;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.config.impl.MasterConfig;
-import dev.isnow.betterkingdoms.config.impl.commands.CommandsConfig;
+import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
 import dev.isnow.betterkingdoms.config.impl.kingdom.KingdomConfig;
+import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
-import pl.mikigal.config.Config;
-import pl.mikigal.config.ConfigAPI;
-import pl.mikigal.config.style.CommentStyle;
-import pl.mikigal.config.style.NameStyle;
+
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Getter
 public class ConfigManager {
     private MasterConfig masterConfig;
     private DatabaseConfig databaseConfig;
-    private CommandsConfig commandsConfig;
+    private CommandConfig commandsConfig;
     private KingdomConfig kingdomConfig;
 
     public ConfigManager(final BetterKingdoms plugin) {
@@ -27,20 +30,28 @@ public class ConfigManager {
     }
 
     private void load(final BetterKingdoms plugin) {
-        masterConfig = (MasterConfig) init(MasterConfig.class, true, plugin);
-        databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, false, plugin);
-        commandsConfig = (CommandsConfig) init(CommandsConfig.class, true, plugin);
-        kingdomConfig = (KingdomConfig) init(KingdomConfig.class, true, plugin);
+        masterConfig = (MasterConfig) init(MasterConfig.class, "config", plugin);
+        databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, "database", plugin);
+        commandsConfig = (CommandConfig) init(CommandConfig.class, "commands", plugin);
+        kingdomConfig = (KingdomConfig) init(KingdomConfig.class, "kingdom", plugin);
     }
 
-    private Config init(final Class<? extends Config> clazz, final boolean color, final BetterKingdoms plugin) {
-        return ConfigAPI.init(
-                (Class<? extends Config>) clazz,
-                NameStyle.CAMEL_CASE,
-                CommentStyle.ABOVE_CONTENT,
-                color,
-                plugin
-        );
+    private <T> Object init(final Class<T> clazz, final String name, final BetterKingdoms plugin) {
+        final Path configFile = Paths.get(plugin.getDataFolder() + File.separator + name + ".yml");
+
+        if (!configFile.toFile().exists()) {
+            try {
+                Constructor<T> constructor = clazz.getDeclaredConstructor();
+                constructor.setAccessible(true);
+                T newConfig = constructor.newInstance();
+                YamlConfigurations.save(configFile, clazz, newConfig);
+            } catch (Exception e) {
+                BetterLogger.error("Failed to save default config: " + e);
+            }
+        }
+
+        return YamlConfigurations.load(configFile, clazz);
+
     }
 
 }

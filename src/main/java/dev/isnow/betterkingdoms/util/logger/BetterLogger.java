@@ -29,7 +29,7 @@ public class BetterLogger {
     }
 
     public void debug(final String log) {
-        if(!BetterKingdoms.getInstance().getConfigManager().getMasterConfig().getDebug()) return;
+        if(!BetterKingdoms.getInstance().getConfigManager().getMasterConfig().isDebug()) return;
 
         Bukkit.getConsoleSender().sendMessage(ComponentUtil.deserialize(prefix + " &a[DEBUG] " + log));
     }

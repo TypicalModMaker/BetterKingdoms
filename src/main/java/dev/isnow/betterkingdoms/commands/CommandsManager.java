@@ -3,7 +3,7 @@ package dev.isnow.betterkingdoms.commands;
 import co.aikar.commands.PaperCommandManager;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.commands.impl.KingdomsCommand;
-import dev.isnow.betterkingdoms.config.impl.commands.CommandNames;
+import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
 
 public class CommandsManager {
 
@@ -15,45 +15,42 @@ public class CommandsManager {
 //        internalCommandManager.enableUnstableAPI("brigadier");
 //        internalCommandManager.enableUnstableAPI("help");
 
-        final CommandNames commandNames = plugin.getConfigManager().getCommandsConfig().getCommandNames();
-
-        init(commandNames);
+        init(plugin);
 
         internalCommandManager.registerCommand(new KingdomsCommand());
     }
 
     // TODO: FIX
     public void reload() {
-        final CommandNames commandNames = BetterKingdoms.getInstance().getConfigManager().getCommandsConfig().getCommandNames();
-
-        init(commandNames);
+        init(BetterKingdoms.getInstance());
     }
 
     public void unload() {
         internalCommandManager.unregisterCommands();
     }
 
-    private void init(final CommandNames commandNames) {
-        internalCommandManager.getCommandReplacements().addReplacement("help", commandNames.getHelp());
+    private void init(final BetterKingdoms plugin) {
+        final CommandConfig commandConfig = plugin.getConfigManager().getCommandsConfig();
+        internalCommandManager.getCommandReplacements().addReplacement("help", commandConfig.getHelp());
 
-        internalCommandManager.getCommandReplacements().addReplacement("create", commandNames.getCreate());
-        internalCommandManager.getCommandReplacements().addReplacement("create_tab_completion", commandNames.getCreate_tab_completion());
+        internalCommandManager.getCommandReplacements().addReplacement("create", commandConfig.getCreate());
+        internalCommandManager.getCommandReplacements().addReplacement("create_tab_completion", commandConfig.getCreate_tab_completion());
 
-        internalCommandManager.getCommandReplacements().addReplacement("claim", commandNames.getClaim());
-        internalCommandManager.getCommandReplacements().addReplacement("invite", commandNames.getInvite());
-        internalCommandManager.getCommandReplacements().addReplacement("accept", commandNames.getAccept());
+        internalCommandManager.getCommandReplacements().addReplacement("claim", commandConfig.getClaim());
+        internalCommandManager.getCommandReplacements().addReplacement("invite", commandConfig.getInvite());
+        internalCommandManager.getCommandReplacements().addReplacement("accept", commandConfig.getAccept());
 
-        internalCommandManager.getCommandReplacements().addReplacement("disband", commandNames.getDisband());
-        internalCommandManager.getCommandReplacements().addReplacement("admin_disband_tab_completion", commandNames.getDisband_admin_tab_completion());
+        internalCommandManager.getCommandReplacements().addReplacement("disband", commandConfig.getDisband());
+        internalCommandManager.getCommandReplacements().addReplacement("admin_disband_tab_completion", commandConfig.getDisband_admin_tab_completion());
 
-        internalCommandManager.getCommandReplacements().addReplacement("king", commandNames.getKing());
+        internalCommandManager.getCommandReplacements().addReplacement("king", commandConfig.getKing());
 
-        internalCommandManager.getCommandReplacements().addReplacement("description", commandNames.getDescription());
-        internalCommandManager.getCommandReplacements().addReplacement("description_tab_completion", commandNames.getDescription_tab_completion());
+        internalCommandManager.getCommandReplacements().addReplacement("description", commandConfig.getDescription());
+        internalCommandManager.getCommandReplacements().addReplacement("description_tab_completion", commandConfig.getDescription_tab_completion());
 
-        internalCommandManager.getCommandReplacements().addReplacement("home", commandNames.getHome());
-        internalCommandManager.getCommandReplacements().addReplacement("sethome", commandNames.getSethome());
+        internalCommandManager.getCommandReplacements().addReplacement("home", commandConfig.getHome());
+        internalCommandManager.getCommandReplacements().addReplacement("sethome", commandConfig.getSethome());
 
-        internalCommandManager.getCommandReplacements().addReplacement("manualsave", commandNames.getManualsave());
+        internalCommandManager.getCommandReplacements().addReplacement("manualsave", commandConfig.getManualsave());
     }
 }

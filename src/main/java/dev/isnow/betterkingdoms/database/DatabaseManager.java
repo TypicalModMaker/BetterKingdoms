@@ -37,7 +37,7 @@ public class DatabaseManager {
 
         Database db;
 
-        final dev.isnow.betterkingdoms.config.impl.database.Database authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig().getDatabase();
+        final dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig();
         final DataSourceConfig dataSourceConfig = getDataSourceConfig(plugin, authConfig);
 
         final MasterConfig masterConfig = BetterKingdoms.getInstance().getConfigManager().getMasterConfig();
@@ -45,11 +45,11 @@ public class DatabaseManager {
 
         final String dataPath = plugin.getDataFolder().getAbsolutePath() + File.separator + "do_not_delete_databaseMigrations";
 
-        final boolean firstRun = masterConfig.getFirstRun();
+        final boolean firstRun = masterConfig.isFirstRun();
 
         if(firstRun) {
             generateMigration(authConfig.getDatabaseType(), plugin);
-        } else if(SCHEMA_VERSION > masterConfig.getCurrentSchema()) {
+        } else if(SCHEMA_VERSION > masterConfig.getSchemaVersion()) {
             BetterLogger.info("Schema version changed! BetterKingdoms will migrate the database automatically.");
             generateMigration(authConfig.getDatabaseType(), plugin);
 
@@ -71,7 +71,7 @@ public class DatabaseManager {
 
             // Successfully migrated
             if(!firstRun) {
-                masterConfig.setCurrentSchema(SCHEMA_VERSION);
+                masterConfig.setSchemaVersion(SCHEMA_VERSION);
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -101,7 +101,7 @@ public class DatabaseManager {
         config.setName("db");
 
         // Generate tables
-        if(masterConfig.getFirstRun()) {
+        if(masterConfig.isFirstRun()) {
             config.ddlGenerate(true);
             config.ddlRun(true);
 
@@ -110,7 +110,7 @@ public class DatabaseManager {
         return config;
     }
 
-    private DataSourceConfig getDataSourceConfig(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.Database authConfig) {
+    private DataSourceConfig getDataSourceConfig(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig authConfig) {
         final DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
         dataSourceConfig.setUsername(authConfig.getUsername());
@@ -120,7 +120,7 @@ public class DatabaseManager {
         return dataSourceConfig;
     }
 
-    private String getUrl(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.Database authConfig) {
+    private String getUrl(final BetterKingdoms plugin, final dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig authConfig) {
         switch (authConfig.getDatabaseType()) {
             case MYSQL -> {
                 return "jdbc:mysql://" + authConfig.getIp() + "/" + authConfig.getDatabaseName();

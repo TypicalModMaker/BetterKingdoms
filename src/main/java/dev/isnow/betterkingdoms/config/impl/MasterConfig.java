@@ -1,32 +1,27 @@
 package dev.isnow.betterkingdoms.config.impl;
 
+import de.exlll.configlib.Comment;
+import de.exlll.configlib.Configuration;
 import dev.isnow.betterkingdoms.database.DatabaseManager;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
-import pl.mikigal.config.Config;
-import pl.mikigal.config.annotation.Comment;
-import pl.mikigal.config.annotation.ConfigName;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@ConfigName("config.yml")
-public interface MasterConfig extends Config {
-    void setFirstRun(final boolean firstRun);
+@Getter
+@Setter
+@RequiredArgsConstructor
+@Configuration
+public class MasterConfig {
+    @Comment({BetterLogger.bigPrefix, "", "BetterKingdoms Configuration, refer to the docs for more info.", "", "", "DO NOT TOUCH! This will drop your database."})
+    boolean firstRun = true;
 
-    @Comment(BetterLogger.bigPrefix + "\n DO NOT EDIT THIS LINE! Editing this will clear your database.")
-    default boolean getFirstRun() {
-        return true;
-    }
+    @Comment({"", "Development messages in console, useful for debugging and fixing issues."})
+    boolean debug = false;
 
-    @Comment("DO NOT EDIT THIS LINE! Editing this will break your database.")
-    default int getCurrentSchema() {
-        return DatabaseManager.SCHEMA_VERSION;
-    }
+    @Comment({"", "DO NOT TOUCH! This might break your database or make BetterKingdoms not being able to load."})
+    int schemaVersion = 10;
 
-    void setCurrentSchema(final int currentSchema);
-
-    @Comment("Development mode [Testing purposes only]")
-    default boolean getDebug() {
-        return false;
-    }
-
-    @Comment("Thread amount - Try increasing if your database is lagging with higher player count")
-    default int getThreadAmount() { return 50; }
+    @Comment({"", "Increase this if your server or database is lagging"})
+    int threadAmount = 50;
 }
