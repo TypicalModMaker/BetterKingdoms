@@ -62,9 +62,7 @@ public final class BetterKingdoms extends JavaPlugin {
         final ClassLoader pluginClassLoader = BetterKingdoms.class.getClassLoader();
 
         Thread.currentThread().setContextClassLoader(pluginClassLoader);
-
         databaseManager = new DatabaseManager(this, pluginClassLoader);
-
         Thread.currentThread().setContextClassLoader(originalClassLoader);
 
         if(databaseManager.getDb() == null) {
@@ -73,7 +71,11 @@ public final class BetterKingdoms extends JavaPlugin {
             return;
         } else {
             BetterLogger.info("Connected successfully.");
-            configManager.getMasterConfig().setFirstRun(false);
+
+            if(configManager.getMasterConfig().isFirstRun()) {
+                configManager.getMasterConfig().setFirstRun(false);
+                BetterKingdoms.getInstance().getConfigManager().saveConfigs();
+            }
         }
 
         usePlaceholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");

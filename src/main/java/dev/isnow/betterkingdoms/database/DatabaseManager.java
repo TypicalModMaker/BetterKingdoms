@@ -72,6 +72,7 @@ public class DatabaseManager {
             // Successfully migrated
             if(!firstRun) {
                 masterConfig.setSchemaVersion(SCHEMA_VERSION);
+                BetterKingdoms.getInstance().getConfigManager().saveConfigs();
             }
         } catch (final Exception e) {
             e.printStackTrace();

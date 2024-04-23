@@ -29,6 +29,15 @@ public class ConfigManager {
         load(BetterKingdoms.getInstance());
     }
 
+    public void saveConfigs() {
+        final BetterKingdoms plugin = BetterKingdoms.getInstance();
+
+        save(MasterConfig.class, masterConfig,"config", plugin);
+        save(DatabaseConfig.class, databaseConfig, "database", plugin);
+        save(CommandConfig.class, commandsConfig, "commands", plugin);
+        save(KingdomConfig.class, kingdomConfig,"kingdom", plugin);
+    }
+
     private void load(final BetterKingdoms plugin) {
         masterConfig = (MasterConfig) init(MasterConfig.class, "config", plugin);
         databaseConfig = (DatabaseConfig) init(DatabaseConfig.class, "database", plugin);
@@ -51,7 +60,15 @@ public class ConfigManager {
         }
 
         return YamlConfigurations.load(configFile, clazz);
-
     }
 
+    private <T> void save(final Class<T> clazz, final T instance, final String name, final BetterKingdoms plugin) {
+        final Path configFile = Paths.get(plugin.getDataFolder() + File.separator + name + ".yml");
+
+        try {
+            YamlConfigurations.save(configFile, clazz, instance);
+        } catch (Exception e) {
+            BetterLogger.error("Failed to save config: " + e);
+        }
+    }
 }
