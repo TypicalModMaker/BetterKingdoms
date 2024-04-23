@@ -7,7 +7,6 @@ import dev.isnow.betterkingdoms.config.impl.commands.CommandNames;
 
 public class CommandsManager {
 
-    @SuppressWarnings("ALL") // TODO: add command name translations and remove this suppression
     private final PaperCommandManager internalCommandManager;
 
     public CommandsManager(BetterKingdoms plugin) {

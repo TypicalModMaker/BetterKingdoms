@@ -5,6 +5,8 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import dev.isnow.betterkingdoms.util.converter.LocationConverter;
+import dev.isnow.betterkingdoms.util.logger.BetterLogger;
+import io.ebean.Transaction;
 import io.ebean.annotation.Length;
 import io.ebean.annotation.NotNull;
 import jakarta.persistence.*;
@@ -61,15 +63,27 @@ public class Kingdom extends BaseKingdom {
     }
 
     public void deleteKingdom() {
-        for(final KingdomUser user : members) {
-            user.setAttachedKingdom(null);
-            user.setKingdomRank(null);
-        }
+        final Transaction transaction = BetterKingdoms.getInstance().getDatabaseManager().getDb().beginTransaction();
 
-        for(KingdomUser user : pendingInvites) {
-            user.setKingdomInvite(null);
-        }
+        try {
+            for(final KingdomUser user : members) {
+                user.setAttachedKingdom(null);
+                user.setKingdomRank(null);
+                user.save();
+            }
 
+            for(final KingdomUser user : pendingInvites) {
+                user.setKingdomInvite(null);
+                user.save();
+            }
+
+            transaction.commit();
+        } catch (final Exception e) {
+            BetterLogger.error("Failed to save user data to the database! Error: " + e);
+            transaction.rollback();
+        } finally {
+            transaction.end();
+        }
 
         new BukkitRunnable() {
             @Override
@@ -79,8 +93,7 @@ public class Kingdom extends BaseKingdom {
 
         }.runTask(BetterKingdoms.getInstance());
 
-
-
+        BetterKingdoms.getInstance().getDatabaseManager().deleteKingdom(this);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted") // Possible usage in future
@@ -89,13 +102,14 @@ public class Kingdom extends BaseKingdom {
                 .map(Player::getUniqueId)
                 .collect(Collectors.toSet());
 
+
         return members.stream().anyMatch(member -> {
             UUID playerUuid = member.getPlayerUuid();
             if (playerUuid.equals(exception)) {
                 return false; // Excluded member
             }
 
-            return !onlinePlayerUuids.contains(playerUuid);
+            return onlinePlayerUuids.contains(playerUuid);
         });
     }
 }
