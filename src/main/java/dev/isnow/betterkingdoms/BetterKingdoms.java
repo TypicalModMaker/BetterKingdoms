@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.isnow.betterkingdoms.commands.CommandsManager;
 import dev.isnow.betterkingdoms.config.ConfigManager;
 import dev.isnow.betterkingdoms.database.DatabaseManager;
+import dev.isnow.betterkingdoms.database.DatabaseRunnable;
 import dev.isnow.betterkingdoms.hook.placeholderapi.BetterKingdomsExpansion;
 import dev.isnow.betterkingdoms.kingdoms.KingdomManager;
 import dev.isnow.betterkingdoms.reflection.ClassRegistrationManager;
@@ -106,6 +107,9 @@ public final class BetterKingdoms extends JavaPlugin {
                 testWorld.unloadChunkRequest(0, 0);
             }
         }.runTaskLater(this, 100);
+
+        final long autoSaveInterval = configManager.getDatabaseConfig().getDatabaseAutoSaveInterval();
+        new DatabaseRunnable().runTaskTimerAsynchronously(this, autoSaveInterval, autoSaveInterval);
 
         final String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));
         BetterLogger.info("Finished loading in " + date);

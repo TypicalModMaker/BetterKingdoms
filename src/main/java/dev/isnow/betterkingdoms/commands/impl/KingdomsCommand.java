@@ -10,6 +10,7 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.util.ComponentUtil;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -54,7 +55,11 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-        Kingdom kingdom = new Kingdom(kingdomName, player.getLocation());
+        final Location blockLocation = player.getLocation().getBlock().getLocation().clone();
+        blockLocation.setPitch(player.getPitch());
+        blockLocation.setYaw(player.getYaw());
+
+        Kingdom kingdom = new Kingdom(kingdomName, blockLocation);
         kingdom.addMember(kUser, KingdomRank.OWNER);
 
         BetterKingdoms.getInstance().getKingdomManager().addKingdom(kingdom);
@@ -134,6 +139,11 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
+        if(kUser.getPlayerUuid() == tUser.getPlayerUuid()) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou are already the owner of this kingdom!"));
+            return;
+        }
+
         tUser.setKingdomRank(KingdomRank.OWNER);
         kUser.setKingdomRank(KingdomRank.COOWNER);
 
@@ -167,7 +177,7 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() < KingdomRank.OFFICER.ordinal()) {
+        if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
             player.sendMessage(ComponentUtil.deserialize("&cYou do not have rights to edit the description of your kingdom!"));
             return;
         }
@@ -203,7 +213,11 @@ public class KingdomsCommand extends BaseCommand {
         }
 
         if(tUser.getAttachedKingdom() != null) {
-            player.sendMessage(ComponentUtil.deserialize("&cThis person already has a kingdom!"));
+            if(attachedKingdom.getName().equals(tUser.getAttachedKingdom().getName())) {
+                player.sendMessage(ComponentUtil.deserialize("&cThis person is already a member of your kingdom!"));
+            } else {
+                player.sendMessage(ComponentUtil.deserialize("&cThis person already has a kingdom!"));
+            }
             return;
         }
 
@@ -257,6 +271,58 @@ public class KingdomsCommand extends BaseCommand {
 
         kUser.setKingdomInvite(null);
         player.sendMessage(ComponentUtil.deserialize("&aYou have joined " + kingdom.getName() + "!"));
+    }
+
+    @Subcommand("%home")
+    @CommandPermission("betterkingdoms.home")
+    public void teleportHome(final Player player) {
+        final Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(player);
+
+        if(user.isEmpty()) {
+            player.sendMessage(ComponentUtil.deserialize("&cFailed to find your kingdoms data. Contact an administrator to resolve this issue."));
+            return;
+        }
+
+        final KingdomUser kUser = user.get();
+
+        final Kingdom attachedKingdom = kUser.getAttachedKingdom();
+        if(attachedKingdom == null) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou don't have a kingdom!"));
+            return;
+        }
+
+        player.teleport(attachedKingdom.getHomeLocation());
+        player.sendMessage(ComponentUtil.deserialize("&aTeleported to your kingdoms home!"));
+    }
+
+    @Subcommand("%sethome")
+    @CommandPermission("betterkingdoms.sethome")
+    public void setHome(final Player player) {
+        final Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(player);
+
+        if(user.isEmpty()) {
+            player.sendMessage(ComponentUtil.deserialize("&cFailed to find your kingdoms data. Contact an administrator to resolve this issue."));
+            return;
+        }
+
+        final KingdomUser kUser = user.get();
+
+        final Kingdom attachedKingdom = kUser.getAttachedKingdom();
+        if(attachedKingdom == null) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou don't have a kingdom!"));
+            return;
+        }
+
+        if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
+            player.sendMessage(ComponentUtil.deserialize("&cYou do not have rights to set the home location of your kingdom!"));
+            return;
+        }
+
+        final Location playerLocation = player.getLocation();
+        attachedKingdom.setHomeLocation(playerLocation.clone());
+
+        final String location = playerLocation.getBlockX() + ", " + playerLocation.getBlockY();
+        player.sendMessage(ComponentUtil.deserialize("&aSuccessfully set your kingdoms home location to " + location));
     }
 
     @Subcommand("admin %manualsave")

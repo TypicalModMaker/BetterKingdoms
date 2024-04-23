@@ -9,4 +9,6 @@ public interface DatabaseConfig extends Config {
     default Database getDatabase() {
         return new Database("127.0.0.1", "sa", "", "betterkingdoms", Platform.H2);
     }
+
+    default long getDatabaseAutoSaveInterval() { return 900; }
 }

@@ -18,6 +18,8 @@ public class CommandNames implements Serializable {
     private String accept;
     private String invite;
     private String description, description_tab_completion;
+    private String home;
+    private String sethome;
     private String manualsave;
 
 

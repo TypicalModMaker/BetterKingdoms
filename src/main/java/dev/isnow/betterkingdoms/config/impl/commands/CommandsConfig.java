@@ -14,6 +14,8 @@ public interface CommandsConfig extends Config {
                 "akceptuj",
                 "zapros",
                 "opis", "<Opis_Królestwa>",
+                "home",
+                "sethome",
                 "manualsave");
     }
 }

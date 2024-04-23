@@ -12,8 +12,8 @@ public class CommandsManager {
     public CommandsManager(BetterKingdoms plugin) {
         internalCommandManager = new PaperCommandManager(plugin);
 
-        internalCommandManager.enableUnstableAPI("brigadier");
-        internalCommandManager.enableUnstableAPI("help");
+//        internalCommandManager.enableUnstableAPI("brigadier");
+//        internalCommandManager.enableUnstableAPI("help");
 
         final CommandNames commandNames = plugin.getConfigManager().getCommandsConfig().getCommandNames();
 
@@ -50,6 +50,9 @@ public class CommandsManager {
 
         internalCommandManager.getCommandReplacements().addReplacement("description", commandNames.getDescription());
         internalCommandManager.getCommandReplacements().addReplacement("description_tab_completion", commandNames.getDescription_tab_completion());
+
+        internalCommandManager.getCommandReplacements().addReplacement("home", commandNames.getHome());
+        internalCommandManager.getCommandReplacements().addReplacement("sethome", commandNames.getSethome());
 
         internalCommandManager.getCommandReplacements().addReplacement("manualsave", commandNames.getManualsave());
     }
