@@ -118,9 +118,13 @@ public class KingdomManager {
     }
 
     public final void deleteKingdom(final Kingdom kingdom) {
-        kingdom.deleteKingdom();
-        kingdoms.remove(kingdom.getName());
+        try {
+            kingdom.deleteKingdom();
+        } catch (Exception e) {
+            BetterLogger.warn("Failed to delete kingdom " + kingdom.getName() + "!" + " Error: " + e);
+        }
 
+        kingdoms.remove(kingdom.getName());
     }
 
     public final Collection<Kingdom> getAllLoadedKingdoms() {

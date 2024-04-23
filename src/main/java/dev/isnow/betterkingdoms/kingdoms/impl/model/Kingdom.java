@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
+import dev.isnow.betterkingdoms.util.converter.LocationConverter;
 import io.ebean.annotation.Length;
 import io.ebean.annotation.NotNull;
 import jakarta.persistence.*;
@@ -13,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +35,10 @@ public class Kingdom extends BaseKingdom {
     @Column(name = "resourcepoints")
     private long resourcePoints;
 
-    @NotNull @Column(name = "nexuslocation")
+    @NotNull @Column(name = "nexuslocation") @Convert(converter = LocationConverter.class)
     private Location nexusLocation;
 
-    @OneToMany(mappedBy = "attachedKingdom")
+    @OneToMany(mappedBy = "attachedKingdom", cascade = CascadeType.ALL)
     private List<KingdomUser> members;
 
     @Transient
@@ -68,8 +70,17 @@ public class Kingdom extends BaseKingdom {
             user.setKingdomInvite(null);
         }
 
-        // TODO: FIX
-        nexusLocation.getBlock().setType(Material.AIR);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                nexusLocation.getBlock().setType(Material.AIR);
+            }
+
+        }.runTask(BetterKingdoms.getInstance());
+
+
+
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted") // Possible usage in future

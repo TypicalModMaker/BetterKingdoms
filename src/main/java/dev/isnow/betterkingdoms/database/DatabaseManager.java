@@ -30,13 +30,13 @@ import java.util.UUID;
 @Getter
 public class DatabaseManager {
 
-    public static final int SCHEMA_VERSION = 8;
+    public static final int SCHEMA_VERSION = 9;
 
     private final Database db;
 
     public DatabaseManager(final BetterKingdoms plugin, final ClassLoader pluginLoader) {
 
-        Database db = null;
+        Database db;
 
         final dev.isnow.betterkingdoms.config.impl.database.Database authConfig = BetterKingdoms.getInstance().getConfigManager().getDatabaseConfig().getDatabase();
         final DataSourceConfig dataSourceConfig = getDataSourceConfig(plugin, authConfig);
