@@ -55,7 +55,7 @@ public class Kingdom extends BaseKingdom {
         this.description = "";
         this.resourcePoints = 0;
         this.nexusLocation = nexusLocation;
-        this.homeLocation = nexusLocation.clone().add(0.5, BetterKingdoms.getInstance().getKingdomManager().nexusBlockHeight, 1.5);
+        this.homeLocation = nexusLocation.clone().add(0.5, BetterKingdoms.getInstance().getKingdomManager().nexusBlockHeight, 0.5);
 
         nexusLocation.getBlock().setType(BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getNexusMaterial());
     }
