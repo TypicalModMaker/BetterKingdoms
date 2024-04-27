@@ -15,3 +15,4 @@ libraries:
   - com.h2database:h2:2.2.224
   - com.mysql:mysql-connector-j:8.3.0
   - de.exlll:configlib-paper:4.5.0
+  - com.github.ben-manes.caffeine:caffeine:3.1.8

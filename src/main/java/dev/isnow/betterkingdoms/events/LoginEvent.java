@@ -13,8 +13,6 @@ public class LoginEvent implements Listener {
 
     @EventHandler
     public void onLogin(AsyncPlayerPreLoginEvent event) {
-
-        // Doesn't need to be async if the event is async, but I want to use our dedicated pool for that
-        ThreadUtil.loadUserAsync(event.getUniqueId(), kingdomUser -> BetterKingdoms.getInstance().getKingdomManager().addUser(Objects.requireNonNullElseGet(kingdomUser, () -> new KingdomUser(event.getUniqueId()))));
+        BetterKingdoms.getInstance().getKingdomManager().preloadUser(event.getUniqueId());
     }
 }

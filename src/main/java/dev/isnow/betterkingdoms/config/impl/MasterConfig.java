@@ -24,4 +24,7 @@ public class MasterConfig {
 
     @Comment({"", "Increase this if your database is lagging with higher player count"})
     int threadAmount = 50;
+
+    @Comment({"", "Increase this if your database is being called too often"})
+    int cacheSizeLimit = 500;
 }

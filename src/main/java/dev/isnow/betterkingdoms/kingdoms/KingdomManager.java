@@ -1,22 +1,35 @@
 package dev.isnow.betterkingdoms.kingdoms;
 
+import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
+import dev.isnow.betterkingdoms.util.cache.impl.KingdomCache;
+import dev.isnow.betterkingdoms.util.cache.impl.KingdomUserCache;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class KingdomManager {
 
-    private final Map<String, Kingdom> kingdoms = new HashMap<>();
+    private final KingdomCache kingdoms;
 
-    private final Map<UUID, KingdomUser> kingdomUsers = new HashMap<>();
+    private final KingdomUserCache kingdomUsers;
 
     public double nexusBlockHeight = 1;
 
+    public KingdomManager() {
+        kingdoms = new KingdomCache();
+
+        kingdomUsers = new KingdomUserCache();
+    }
 
     public final void addUser(final KingdomUser user) {
         kingdomUsers.put(user.getPlayerUuid(), user);
@@ -25,12 +38,7 @@ public class KingdomManager {
 
         if (attachedKingdom == null) return;
 
-        if (!kingdoms.containsKey(attachedKingdom.getName())) {
-            BetterLogger.debug("Adding " + attachedKingdom.getName() + " to the cache kingdoms list");
-            kingdoms.put(attachedKingdom.getName(), attachedKingdom);
-        } else {
-            user.setAttachedKingdom(findKingdom(attachedKingdom.getName(), false).orElse(attachedKingdom));
-        }
+        kingdoms.put(attachedKingdom.getName(), attachedKingdom);
     }
 
     public final void removeUser(final KingdomUser user) {
@@ -73,9 +81,7 @@ public class KingdomManager {
     public final void removeKingdom(final Kingdom kingdom, final boolean checkCache) {
         if (checkCache && !kingdom.anyMemberOnline(null)) return;
 
-        ThreadUtil.saveKingdomAsync(kingdom, __ -> {
-            kingdoms.remove(kingdom.getName());
-        });
+        kingdoms.remove(kingdom.getName());
     }
 
     public final Optional<KingdomUser> findUser(final Player player) {
@@ -87,18 +93,7 @@ public class KingdomManager {
     }
 
     public final Optional<KingdomUser> findUser(final UUID player, final boolean fetchDB) {
-        Optional<KingdomUser> kingdomUser = Optional.ofNullable(kingdomUsers.get(player));
-
-        if (kingdomUser.isEmpty() && fetchDB) {
-            KingdomUser sqlKingdomUser = BetterKingdoms.getInstance().getDatabaseManager().loadUser(player);
-            if (sqlKingdomUser != null) {
-                kingdomUsers.put(sqlKingdomUser.getPlayerUuid(), sqlKingdomUser);
-
-                kingdomUser = Optional.of(sqlKingdomUser);
-            }
-        }
-
-        return kingdomUser;
+        return Optional.of(kingdomUsers.get(player, fetchDB));
     }
 
     public final Optional<Kingdom> findKingdom(final String kingdomName) {
@@ -106,35 +101,26 @@ public class KingdomManager {
     }
 
     public final Optional<Kingdom> findKingdom(final String kingdomName, final boolean fetchDB) {
-        Optional<Kingdom> kingdom = Optional.ofNullable(kingdoms.get(kingdomName));
-
-        if (kingdom.isEmpty() && fetchDB) {
-            final Kingdom sqlKingdom = BetterKingdoms.getInstance().getDatabaseManager().loadKingdom(kingdomName);
-            if (sqlKingdom != null) {
-                kingdoms.put(sqlKingdom.getName(), sqlKingdom);
-
-                kingdom = Optional.of(sqlKingdom);
-            }
-        }
-
-        return kingdom;
+        return Optional.of(kingdoms.get(kingdomName, fetchDB));
     }
 
     public final void deleteKingdom(final Kingdom kingdom) {
-        try {
-            kingdom.deleteKingdom();
-        } catch (Exception e) {
-            BetterLogger.warn("Failed to delete kingdom " + kingdom.getName() + "!" + " Error: " + e);
-        }
-
         kingdoms.remove(kingdom.getName());
     }
 
+    public final void saveKingdom(final Kingdom kingdom) {
+        kingdoms.save(kingdom);
+    }
+
+    public final void preloadUser(final UUID uuid) {
+        kingdomUsers.preload(uuid);
+    }
+
     public final Collection<Kingdom> getAllLoadedKingdoms() {
-        return kingdoms.values();
+        return kingdoms.getAll();
     }
     public final Collection<KingdomUser> getAllLoadedUsers() {
-        return kingdomUsers.values();
+        return kingdomUsers.getAll();
     }
 
 }

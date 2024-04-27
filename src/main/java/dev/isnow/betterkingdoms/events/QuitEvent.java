@@ -9,7 +9,7 @@ public class QuitEvent implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        ThreadUtil.saveUserAsync(event.getPlayer().getUniqueId(), true);
+//        ThreadUtil.saveUserAsync(event.getPlayer().getUniqueId(), true);
     }
 
 }

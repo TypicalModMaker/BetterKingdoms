@@ -191,24 +191,10 @@ public class DatabaseManager {
         }
     }
 
-    public final void saveUser(final UUID uuid) {
-        saveUser(uuid, false);
-    }
+    public final void saveUser(final KingdomUser user) {
+        BetterLogger.debug("Saving user " + Bukkit.getOfflinePlayer(user.getPlayerUuid()));
 
-    public final void saveUser(final UUID uuid, final boolean remove) {
-        Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(uuid, false);
-
-        BetterLogger.debug("Saving user " + uuid);
-
-        if(user.isPresent()) {
-            user.get().save();
-        } else {
-            BetterLogger.debug("Tried to save a non-existing user");
-        }
-
-        if(remove) {
-            BetterKingdoms.getInstance().getKingdomManager().removeUser(uuid);
-        }
+        db.save(user);
     }
 
     public final void saveKingdom(final Kingdom kingdom) {
@@ -216,7 +202,6 @@ public class DatabaseManager {
 
         db.save(kingdom);
     }
-
 
     public final void deleteKingdom(final Kingdom kingdom) {
         BetterLogger.debug("deleting kingdom " + kingdom.getName());

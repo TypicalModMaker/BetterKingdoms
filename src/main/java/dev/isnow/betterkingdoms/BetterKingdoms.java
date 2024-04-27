@@ -32,8 +32,7 @@ public final class BetterKingdoms extends JavaPlugin {
     private CommandsManager commandsManager;
     private DatabaseManager databaseManager;
     private ConfigManager configManager;
-
-    private final KingdomManager kingdomManager = new KingdomManager();
+    private KingdomManager kingdomManager;
 
     private ExecutorService threadPool;
 
@@ -46,18 +45,21 @@ public final class BetterKingdoms extends JavaPlugin {
         instance = this;
         BetterLogger.watermark();
 
-        BetterLogger.info("Initializating config");
+        BetterLogger.info("Initializing config");
         configManager = new ConfigManager(this);
 
         threadPool = Executors.newFixedThreadPool(configManager.getMasterConfig().getThreadAmount(), new ThreadFactoryBuilder().setNameFormat("betterkingdoms-worker-thread-%d").build());
 
-        BetterLogger.info("Initializating events");
+        BetterLogger.info("Initializing events");
         ClassRegistrationManager.loadListeners("dev.isnow.betterkingdoms.events");
 
-        BetterLogger.info("Initializating commands");
+        BetterLogger.info("Initializing commands");
         commandsManager = new CommandsManager(this);
 
-        BetterLogger.info("Initializating database connection");
+        BetterLogger.info("Initializing kingdom manager");
+        kingdomManager = new KingdomManager();
+
+        BetterLogger.info("Initializing database connection");
         final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
         final ClassLoader pluginClassLoader = BetterKingdoms.class.getClassLoader();
 
@@ -111,7 +113,7 @@ public final class BetterKingdoms extends JavaPlugin {
             }
         }.runTaskLater(this, 60);
 
-        BetterLogger.info("Starting database autosave system");
+        BetterLogger.info("Initializing database autosave system");
         final int autoSaveInterval = configManager.getDatabaseConfig().getAutoSaveInterval() * 20;
         new DatabaseRunnable().runTaskTimerAsynchronously(this, autoSaveInterval, autoSaveInterval);
 
