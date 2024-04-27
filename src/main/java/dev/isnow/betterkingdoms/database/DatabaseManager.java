@@ -192,7 +192,7 @@ public class DatabaseManager {
     }
 
     public final void saveUser(final KingdomUser user) {
-        BetterLogger.debug("Saving user " + Bukkit.getOfflinePlayer(user.getPlayerUuid()));
+        BetterLogger.debug("Saving user " + Bukkit.getOfflinePlayer(user.getPlayerUuid()).getName());
 
         db.save(user);
     }

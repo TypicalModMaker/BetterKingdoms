@@ -93,7 +93,7 @@ public class KingdomManager {
     }
 
     public final Optional<KingdomUser> findUser(final UUID player, final boolean fetchDB) {
-        return Optional.of(kingdomUsers.get(player, fetchDB));
+        return Optional.ofNullable(kingdomUsers.get(player, fetchDB));
     }
 
     public final Optional<Kingdom> findKingdom(final String kingdomName) {
@@ -101,7 +101,7 @@ public class KingdomManager {
     }
 
     public final Optional<Kingdom> findKingdom(final String kingdomName, final boolean fetchDB) {
-        return Optional.of(kingdoms.get(kingdomName, fetchDB));
+        return Optional.ofNullable(kingdoms.get(kingdomName, fetchDB));
     }
 
     public final void deleteKingdom(final Kingdom kingdom) {
