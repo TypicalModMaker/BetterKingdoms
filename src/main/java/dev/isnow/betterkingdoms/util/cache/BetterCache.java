@@ -26,25 +26,35 @@ public class BetterCache<K, V> {
     private final LoadingCache<K, V> cache;
     private final ISaver<V> saver;
 
-    @SuppressWarnings("unchecked")
-    public BetterCache(final ILoader<K, V> loader, final ISaver<V> saver, final IRemover<V> remover) {
+    @SuppressWarnings("all") // Unchecked cast & 'while' statement cannot complete without throwing an exception supress false positive
+    public BetterCache(final String name, final ILoader<K, V> loader, final ISaver<V> saver, final IRemover<V> remover) {
         this.saver = saver;
         cache = Caffeine.newBuilder()
                 .expireAfterAccess(300, TimeUnit.SECONDS)
                 .removalListener((key, value, cause) -> {
-                    if(value != null) {
+                    if(value != null && !BetterKingdoms.getInstance().isShuttingDown()) {
+                        BetterLogger.debug("Cause: " + cause.name());
                         if(cause == RemovalCause.EXPIRED) {
                             saver.save((V) value);
                         } else if(cause == RemovalCause.EXPLICIT && remover != null) {
                             remover.remove((V) value);
                         }
                     }
-                    if(cause == RemovalCause.EXPIRED && value != null) {
-                        saver.save((V) value);
-                    }
                 })
                 .initialCapacity(BetterKingdoms.getInstance().getConfigManager().getMasterConfig().getCacheSizeLimit())
                 .build(loader::load);
+
+        BetterKingdoms.getInstance().getThreadPool().execute(() -> {
+            while (true) {
+                try {
+                    cache.cleanUp();
+
+                    TimeUnit.MINUTES.sleep(1);
+                } catch (InterruptedException e) {
+                    BetterLogger.warn("Failed to clean the cache: " + e + ", Cache type: " + name);
+                }
+            }
+        });
     }
 
     public V get(final K key) {

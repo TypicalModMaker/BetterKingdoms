@@ -36,7 +36,7 @@ public final class BetterKingdoms extends JavaPlugin {
 
     private ExecutorService threadPool;
 
-    private boolean usePlaceholderAPI;
+    private boolean usePlaceholderAPI, shuttingDown;
 
     @Override
     public void onEnable() {
@@ -124,6 +124,7 @@ public final class BetterKingdoms extends JavaPlugin {
     @Override
     public void onDisable() {
         BetterLogger.watermark();
+        shuttingDown = true;
 
         BetterLogger.info("Unloading commands");
         commandsManager.unload();
@@ -132,6 +133,8 @@ public final class BetterKingdoms extends JavaPlugin {
             databaseManager.saveAllKingdoms();
             databaseManager.shutdown();
         }
+
+        threadPool.shutdownNow();
 
         BetterLogger.info("Goodbye! :)");
     }

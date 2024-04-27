@@ -9,8 +9,9 @@ import java.util.UUID;
 
 public class KingdomUserCache extends BetterCache<UUID, KingdomUser> {
     public KingdomUserCache() {
-        super(key -> BetterKingdoms.getInstance().getDatabaseManager().loadUser(key),
-                value -> BetterKingdoms.getInstance().getDatabaseManager().saveUser(value),
-                null);
+        super("User",
+              key -> BetterKingdoms.getInstance().getDatabaseManager().loadUser(key),
+              value -> BetterKingdoms.getInstance().getDatabaseManager().saveUser(value),
+              null);
     }
 }
