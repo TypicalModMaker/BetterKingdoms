@@ -4,7 +4,6 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import dev.isnow.betterkingdoms.util.converter.AdvancedLocationConverter;
-import dev.isnow.betterkingdoms.util.converter.ChunkConverter;
 import dev.isnow.betterkingdoms.util.converter.LocationConverter;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import io.ebean.Transaction;
@@ -13,18 +12,13 @@ import io.ebean.annotation.NotNull;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "betterkingdoms_kingdom")

@@ -4,7 +4,6 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomChunk;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
-import dev.isnow.betterkingdoms.util.cache.impl.KingdomChunkCache;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Chunk;
