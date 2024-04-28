@@ -2,7 +2,6 @@ package dev.isnow.betterkingdoms.config.impl;
 
 import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
-import dev.isnow.betterkingdoms.database.DatabaseManager;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

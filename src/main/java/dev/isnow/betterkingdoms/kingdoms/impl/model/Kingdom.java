@@ -4,6 +4,7 @@ import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.KingdomRank;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import dev.isnow.betterkingdoms.util.converter.AdvancedLocationConverter;
+import dev.isnow.betterkingdoms.util.converter.ChunkConverter;
 import dev.isnow.betterkingdoms.util.converter.LocationConverter;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import io.ebean.Transaction;
@@ -13,6 +14,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,6 +39,9 @@ public class Kingdom extends BaseKingdom {
     @Column(name = "resourcepoints")
     private long resourcePoints;
 
+    @OneToMany(mappedBy = "attachedKingdom", cascade = CascadeType.ALL)
+    private List<KingdomChunk> claimedChunks;
+
     @NotNull @Column(name = "nexuslocation") @Convert(converter = LocationConverter.class)
     private Location nexusLocation;
 
@@ -51,11 +56,28 @@ public class Kingdom extends BaseKingdom {
 
     public Kingdom(final String name, final Location nexusLocation) {
         this.name = name;
-        this.members = new ArrayList<>();
         this.description = "";
+
+        this.members = new ArrayList<>();
+
         this.resourcePoints = 0;
+
         this.nexusLocation = nexusLocation;
         this.homeLocation = nexusLocation.clone().add(0.5, BetterKingdoms.getInstance().getKingdomManager().nexusBlockHeight, 0.5);
+
+        final Chunk homeChunk = homeLocation.getChunk();
+        final KingdomChunk kingdomChunk = new KingdomChunk(homeChunk.getX(), homeChunk.getZ(), this);
+
+        this.claimedChunks = new ArrayList<>();
+
+        // this is so retarded istg
+
+        this.save();
+
+        kingdomChunk.save();
+        this.claimedChunks.add(kingdomChunk);
+
+        this.save();
 
         nexusLocation.getBlock().setType(BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getNexusMaterial());
     }
@@ -98,22 +120,5 @@ public class Kingdom extends BaseKingdom {
         }.runTask(BetterKingdoms.getInstance());
 
         BetterKingdoms.getInstance().getDatabaseManager().deleteKingdom(this);
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted") // Possible usage in future
-    public boolean anyMemberOnline(UUID exception) {
-        Set<UUID> onlinePlayerUuids = Bukkit.getOnlinePlayers().stream()
-                .map(Player::getUniqueId)
-                .collect(Collectors.toSet());
-
-
-        return members.stream().anyMatch(member -> {
-            UUID playerUuid = member.getPlayerUuid();
-            if (playerUuid.equals(exception)) {
-                return false; // Excluded member
-            }
-
-            return onlinePlayerUuids.contains(playerUuid);
-        });
     }
 }

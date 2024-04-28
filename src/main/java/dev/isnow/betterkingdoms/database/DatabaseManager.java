@@ -3,8 +3,10 @@ package dev.isnow.betterkingdoms.database;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
+import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomChunk;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdom;
+import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomChunk;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.query.QKingdomUser;
 import dev.isnow.betterkingdoms.util.FileUtil;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
@@ -20,16 +22,21 @@ import io.ebean.migration.MigrationRunner;
 import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Getter
 public class DatabaseManager {
 
-    public static final int SCHEMA_VERSION = 10;
+    public static final int SCHEMA_VERSION = 13;
 
     private final Database db;
 
@@ -60,11 +67,31 @@ public class DatabaseManager {
             migrationConfig.setDbUrl(getUrl(plugin, authConfig));
             migrationConfig.setMigrationPath("filesystem:" + dataPath);
 
-            FileUtil.getOldestFile(new File(dataPath)).ifPresent(File::delete);
+            final Optional<File> initMigration = FileUtil.getOldestFile(new File(dataPath));
+
+            AtomicReference<Path> outsidePath = new AtomicReference<>();
+
+            initMigration.ifPresent(file -> {
+                outsidePath.set(Path.of(file.getParent() + File.separator +
+                        ".." + File.separator + file.getName()));
+                try {
+                    Files.move(file.toPath(), outsidePath.get(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    BetterLogger.error("Failed to move initial migration file outside migration folder. Error: " + e);
+                }
+            });
 
             BetterLogger.info("Running Migrator...");
             MigrationRunner runner = new MigrationRunner(migrationConfig);
             runner.run();
+
+            initMigration.ifPresent(file -> {
+                try {
+                    Files.move(outsidePath.get(), Path.of(dataPath + File.separator + file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    BetterLogger.error("Failed to move initial migration file inside migration folder. Error: " + e);
+                }
+            });
         }
         try {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
@@ -154,6 +181,13 @@ public class DatabaseManager {
         return foundKingdom;
     }
 
+
+    public final KingdomChunk loadChunk(final Chunk chunk) {
+        BetterLogger.debug("Loading chunk " + chunk.getX() + " " + chunk.getZ());
+
+        return new QKingdomChunk().where().chunkX.eq(chunk.getX()).chunkZ.eq(chunk.getZ()).findOne();
+    }
+
     public final KingdomUser loadUser(final UUID uuid) {
         BetterLogger.debug("Loading user " + uuid);
 
@@ -182,6 +216,7 @@ public class DatabaseManager {
                 BetterLogger.debug("Saving user: " + Bukkit.getOfflinePlayer(user.getPlayerUuid()).getName());
                 user.save();
             }
+
             transaction.commit();
         } catch (final Exception e) {
             BetterLogger.error("Failed to save user data to the database! Error: " + e);
@@ -207,6 +242,12 @@ public class DatabaseManager {
         BetterLogger.debug("deleting kingdom " + kingdom.getName());
 
         kingdom.deletePermanent();
+    }
+
+    public final void saveChunk(final KingdomChunk kingdomChunk) {
+        BetterLogger.debug("Saving chunk " + kingdomChunk.getChunkX() + " " + kingdomChunk.getChunkZ());
+
+        db.save(kingdomChunk);
     }
 
 }

@@ -4,23 +4,10 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import dev.isnow.betterkingdoms.BetterKingdoms;
-import dev.isnow.betterkingdoms.database.DatabaseManager;
-import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
-import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
-import dev.isnow.betterkingdoms.kingdoms.impl.model.base.BaseKingdom;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 
 import java.util.Collection;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.github.benmanes.caffeine.cache.RemovalCause;
 
 public class BetterCache<K, V> {
     private final LoadingCache<K, V> cache;
@@ -33,8 +20,7 @@ public class BetterCache<K, V> {
                 .expireAfterAccess(300, TimeUnit.SECONDS)
                 .removalListener((key, value, cause) -> {
                     if(value != null && !BetterKingdoms.getInstance().isShuttingDown()) {
-                        BetterLogger.debug("Cause: " + cause.name());
-                        if(cause == RemovalCause.EXPIRED) {
+                        if(cause == RemovalCause.EXPIRED || cause == RemovalCause.SIZE) {
                             saver.save((V) value);
                         } else if(cause == RemovalCause.EXPLICIT && remover != null) {
                             remover.remove((V) value);
@@ -49,7 +35,7 @@ public class BetterCache<K, V> {
                 try {
                     cache.cleanUp();
 
-                    TimeUnit.MINUTES.sleep(1);
+                    TimeUnit.SECONDS.sleep(30);
                 } catch (InterruptedException e) {
                     BetterLogger.warn("Failed to clean the cache: " + e + ", Cache type: " + name);
                 }
@@ -74,7 +60,6 @@ public class BetterCache<K, V> {
         cache.invalidate(key);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void preload(final K key) {
         cache.get(key);
     }

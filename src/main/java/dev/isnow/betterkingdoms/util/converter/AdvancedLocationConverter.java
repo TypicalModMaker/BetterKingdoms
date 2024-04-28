@@ -28,8 +28,13 @@ public class AdvancedLocationConverter implements AttributeConverter<Location, S
         final double y = Double.parseDouble(split[2]);
         final double z = Double.parseDouble(split[3]);
 
-        final float yaw = Float.parseFloat(split[4]);
-        final float pitch = Float.parseFloat(split[5]);
+        float yaw = 0;
+        float pitch = 0;
+
+        if(split.length > 4) {
+            yaw = Float.parseFloat(split[4]);
+            pitch = Float.parseFloat(split[5]);
+        }
 
         if(world != null) {
             return new Location(world, x, y, z, yaw, pitch);

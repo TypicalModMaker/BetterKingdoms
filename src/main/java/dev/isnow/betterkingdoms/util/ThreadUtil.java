@@ -2,10 +2,12 @@ package dev.isnow.betterkingdoms.util;
 
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
+import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomChunk;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
+import dev.isnow.betterkingdoms.util.cache.impl.KingdomChunkCache;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
-import io.ebeaninternal.server.expression.Op;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Chunk;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +26,19 @@ public class ThreadUtil {
 
         if(action != null) {
             kingdomTask.thenAccept(action);
+        }
+
+    }
+
+    public void saveChunkAsync(final KingdomChunk chunk, Consumer<Void> action) {
+
+        final CompletableFuture<Void> chunkTask = CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getDatabaseManager().saveChunk(chunk), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
+            BetterLogger.error("Failed to save chunk: " + ex.toString());
+            return null;
+        });
+
+        if(action != null) {
+            chunkTask.thenAccept(action);
         }
 
     }
@@ -49,6 +64,17 @@ public class ThreadUtil {
         });
 
         userTask.thenAccept(action);
+    }
+
+    public void getSpecifiedKingdomChunkAsync(final Chunk chunk, Consumer<Optional<KingdomChunk>> action) {
+        final CompletableFuture<Optional<KingdomChunk>> kingdomTask = CompletableFuture.supplyAsync(() -> BetterKingdoms.getInstance().getKingdomManager().getSpecifiedKingdomChunk(chunk), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
+            BetterLogger.error("Failed to get chunk: " + ex.toString());
+            return null;
+        });
+
+        if(action != null) {
+            kingdomTask.thenAccept(action);
+        }
     }
 
 }

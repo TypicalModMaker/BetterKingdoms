@@ -5,11 +5,14 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.Kingdom;
+import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomChunk;
 import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
 import dev.isnow.betterkingdoms.util.cache.impl.KingdomCache;
+import dev.isnow.betterkingdoms.util.cache.impl.KingdomChunkCache;
 import dev.isnow.betterkingdoms.util.cache.impl.KingdomUserCache;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -23,65 +26,28 @@ public class KingdomManager {
 
     private final KingdomUserCache kingdomUsers;
 
+    private final KingdomChunkCache kingdomChunks;
+
     public double nexusBlockHeight = 1;
 
     public KingdomManager() {
         kingdoms = new KingdomCache();
 
         kingdomUsers = new KingdomUserCache();
-    }
 
-    public final void addUser(final KingdomUser user) {
-        kingdomUsers.put(user.getPlayerUuid(), user);
-
-        final Kingdom attachedKingdom = user.getAttachedKingdom();
-
-        if (attachedKingdom == null) return;
-
-        kingdoms.put(attachedKingdom.getName(), attachedKingdom);
-    }
-
-    public final void removeUser(final KingdomUser user) {
-        removeUser(user.getPlayerUuid());
-    }
-
-    public final void removeUser(final Player player) {
-        removeUser(player.getUniqueId());
-    }
-
-    public final void removeUser(final UUID uuid) {
-
-        final Optional<KingdomUser> user = findUser(uuid, false);
-
-        if (user.isPresent()) {
-            final KingdomUser kingdomUser = user.get();
-
-            final Kingdom attachedKingdom = kingdomUser.getAttachedKingdom();
-            if(attachedKingdom != null) {
-                final boolean anyMemberOnline = attachedKingdom.anyMemberOnline(kingdomUser.getPlayerUuid());
-
-                BetterLogger.debug("AnyoneOnline: " + anyMemberOnline);
-                if (!anyMemberOnline) {
-                    removeKingdom(attachedKingdom, false);
-                }
-            }
-        }
-
-        kingdomUsers.remove(uuid);
+        kingdomChunks = new KingdomChunkCache();
     }
 
     public final void addKingdom(final Kingdom kingdom) {
         kingdoms.put(kingdom.getName(), kingdom);
     }
 
-    public final void removeKingdom(final Kingdom kingdom) {
-        removeKingdom(kingdom, true);
+    public final void addUser(final KingdomUser user) {
+        kingdomUsers.put(user.getPlayerUuid(), user);
     }
 
-    public final void removeKingdom(final Kingdom kingdom, final boolean checkCache) {
-        if (checkCache && !kingdom.anyMemberOnline(null)) return;
-
-        kingdoms.remove(kingdom.getName());
+    public Optional<KingdomChunk> getSpecifiedKingdomChunk(final Chunk chunk) {
+        return Optional.ofNullable(kingdomChunks.get(chunk));
     }
 
     public final Optional<KingdomUser> findUser(final Player player) {
@@ -114,6 +80,10 @@ public class KingdomManager {
 
     public final void preloadUser(final UUID uuid) {
         kingdomUsers.preload(uuid);
+    }
+
+    public final boolean userExists(final UUID uuid) {
+        return kingdomUsers.contains(uuid);
     }
 
     public final Collection<Kingdom> getAllLoadedKingdoms() {

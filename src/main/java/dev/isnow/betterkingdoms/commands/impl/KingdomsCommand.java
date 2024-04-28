@@ -68,8 +68,6 @@ public class KingdomsCommand extends BaseCommand {
 
         BetterKingdoms.getInstance().getKingdomManager().addKingdom(kingdom);
 
-        ThreadUtil.saveKingdomAsync(kingdom, null);
-
         player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCreatedKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x%", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_z%", blockLocation.getBlockZ()));
     }
 

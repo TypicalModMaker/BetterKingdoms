@@ -5,7 +5,6 @@ import de.exlll.configlib.Configuration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Material;
 
 @Getter
 @Setter
