@@ -2,6 +2,7 @@ package dev.isnow.betterkingdoms.config.impl;
 
 import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
+import dev.isnow.betterkingdoms.config.BetterConfig;
 import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +10,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Configuration
-public class MasterConfig {
+public class MasterConfig extends BetterConfig {
+    public MasterConfig() {
+        super("config");
+    }
+
     @Comment({BetterLogger.bigPrefix, " ", "BetterKingdoms Configuration, refer to the docs for more info.", "", "DO NOT TOUCH! This will drop your database."})
     boolean firstRun = true;
 

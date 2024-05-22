@@ -114,5 +114,7 @@ public class Kingdom extends BaseKingdom {
         }.runTask(BetterKingdoms.getInstance());
 
         BetterKingdoms.getInstance().getDatabaseManager().deleteKingdom(this);
+
+
     }
 }

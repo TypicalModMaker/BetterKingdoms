@@ -48,7 +48,7 @@ public final class BetterKingdoms extends JavaPlugin {
         BetterLogger.watermark();
 
         BetterLogger.info("Initializing config");
-        configManager = new ConfigManager(this);
+        configManager = new ConfigManager();
 
         threadPool = Executors.newFixedThreadPool(configManager.getMasterConfig().getThreadAmount(), new ThreadFactoryBuilder().setNameFormat("betterkingdoms-worker-thread-%d").build());
 

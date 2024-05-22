@@ -2,15 +2,19 @@ package dev.isnow.betterkingdoms.config.impl.messages;
 
 import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
+import dev.isnow.betterkingdoms.BetterKingdoms;
+import dev.isnow.betterkingdoms.config.BetterConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Configuration
-public class MessagesConfig {
+public class MessagesConfig extends BetterConfig {
+    public MessagesConfig() {
+        super("messages");
+    }
 
     @Comment({
             "Message Configuration File",

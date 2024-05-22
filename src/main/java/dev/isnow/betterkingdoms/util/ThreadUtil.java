@@ -44,7 +44,7 @@ public class ThreadUtil {
 
     public void deleteKingdomAsync(final Kingdom kingdom, Consumer<Void> action) {
 
-        final CompletableFuture<Void> kingdomTask = CompletableFuture.runAsync(kingdom::deleteKingdom, BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
+        final CompletableFuture<Void> kingdomTask = CompletableFuture.runAsync(() -> BetterKingdoms.getInstance().getKingdomManager().deleteKingdom(kingdom), BetterKingdoms.getInstance().getThreadPool()).exceptionally(ex -> {
             BetterLogger.error("Failed to delete kingdom: " + ex.toString());
             return null;
         });

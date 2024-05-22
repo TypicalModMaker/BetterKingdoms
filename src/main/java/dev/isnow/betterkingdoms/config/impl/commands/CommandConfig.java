@@ -1,15 +1,19 @@
 package dev.isnow.betterkingdoms.config.impl.commands;
 
 import de.exlll.configlib.Configuration;
+import dev.isnow.betterkingdoms.config.BetterConfig;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Configuration
-public class CommandConfig {
+public class CommandConfig extends BetterConfig {
+
+    public CommandConfig() {
+        super("commands");
+    }
 
     String help = "pomoc|help";
     String create = "zaloz|stworz|create", create_tab_completion = "<Nazwa_Królestwa>";
