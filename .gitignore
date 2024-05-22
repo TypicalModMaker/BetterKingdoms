@@ -92,5 +92,7 @@ target/
 
 # nuh uh, u wish
 sftp.sh
+sftp.cmd
+windows_winscp.script
 
 betterkingdoms.iml

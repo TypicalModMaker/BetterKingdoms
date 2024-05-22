@@ -5,6 +5,7 @@ import dev.isnow.betterkingdoms.commands.CommandsManager;
 import dev.isnow.betterkingdoms.config.ConfigManager;
 import dev.isnow.betterkingdoms.database.DatabaseManager;
 import dev.isnow.betterkingdoms.database.DatabaseRunnable;
+import dev.isnow.betterkingdoms.hook.HookManager;
 import dev.isnow.betterkingdoms.hook.placeholderapi.BetterKingdomsExpansion;
 import dev.isnow.betterkingdoms.kingdoms.KingdomManager;
 import dev.isnow.betterkingdoms.reflection.ClassRegistrationManager;
@@ -33,10 +34,11 @@ public final class BetterKingdoms extends JavaPlugin {
     private DatabaseManager databaseManager;
     private ConfigManager configManager;
     private KingdomManager kingdomManager;
+    private HookManager hookManager;
 
     private ExecutorService threadPool;
 
-    private boolean usePlaceholderAPI, shuttingDown;
+    private boolean shuttingDown;
 
     @Override
     public void onEnable() {
@@ -80,34 +82,37 @@ public final class BetterKingdoms extends JavaPlugin {
             }
         }
 
-        usePlaceholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-        if (usePlaceholderAPI) {
-            BetterLogger.info("Registering PlaceholderAPI hook");
-            new BetterKingdomsExpansion().register();
-        }
+        BetterLogger.info("Hooking into plugins");
+        hookManager = new HookManager();
 
         BetterLogger.info("Getting nexus block height offset");
         final World testWorld = Bukkit.getWorlds().get(0);
         testWorld.loadChunk(0, 0, true);
+
         final Block block = testWorld.getHighestBlockAt(0, 0);
         block.getChunk().setForceLoaded(true);
+
         final Material oldMaterial = block.getType();
         block.setType(configManager.getKingdomConfig().getNexusMaterial());
 
         final Entity testEntity = testWorld.spawnEntity(block.getLocation().clone().add(0.5, 1, 0.5), EntityType.VILLAGER);
         testEntity.setInvulnerable(true);
+
         new BukkitRunnable() {
             @Override
             public void run() {
+
                 if(testEntity.isDead()) {
                     BetterLogger.warn("Failed to get nexus block height, will use the default value for full solid blocks.");
                 } else {
                     kingdomManager.nexusBlockHeight = -(block.getY() - testEntity.getLocation().getY());
                     BetterLogger.debug("Nexus Height: " + kingdomManager.nexusBlockHeight);
-
                 }
+
                 block.setType(oldMaterial);
+
                 testEntity.remove();
+
                 block.getChunk().setForceLoaded(false);
                 testWorld.unloadChunkRequest(0, 0);
             }
@@ -118,7 +123,7 @@ public final class BetterKingdoms extends JavaPlugin {
         new DatabaseRunnable().runTaskTimerAsynchronously(this, autoSaveInterval, autoSaveInterval);
 
         final String date = DateUtil.formatElapsedTime((System.currentTimeMillis() - startTime));
-        BetterLogger.info("Finished loading in " + date);
+        BetterLogger.info("Finished loading in " + date + " seconds.");
     }
 
     @Override

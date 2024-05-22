@@ -36,8 +36,12 @@ public class BetterCache<K, V> {
                     cache.cleanUp();
 
                     TimeUnit.SECONDS.sleep(30);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
+                    if(BetterKingdoms.getInstance().isShuttingDown()) {
+                        return;
+                    }
                     BetterLogger.warn("Failed to clean the cache: " + e + ", Cache type: " + name);
+                    continue;
                 }
             }
         });

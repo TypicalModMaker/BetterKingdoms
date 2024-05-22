@@ -109,8 +109,8 @@
           <url>https://repo.aikar.co/content/groups/aikar/</url>
       </repository>
       <repository>
-        <id>mikigal-repo</id>
-        <url>https://repo.mikigal.pl/releases</url>
+          <id>jitpack.io</id>
+          <url>https://jitpack.io</url>
       </repository>
       <repository>
         <id>placeholderapi</id>
@@ -166,5 +166,11 @@
       <version>3.1.8</version>
       <scope>provided</scope>
     </dependency>
+      <dependency>
+          <groupId>com.github.MilkBowl</groupId>
+          <artifactId>VaultAPI</artifactId>
+          <version>1.7.1</version>
+          <scope>provided</scope>
+      </dependency>
   </dependencies>
 </project>

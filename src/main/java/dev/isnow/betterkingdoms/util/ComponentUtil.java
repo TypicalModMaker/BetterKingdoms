@@ -40,22 +40,17 @@ public class ComponentUtil {
         return deserialize(input, null);
     }
 
-    public Component deserialize(String input, final Player player) {
-        if(player != null && BetterKingdoms.getInstance().isUsePlaceholderAPI()) {
-            input = PlaceholderAPI.setPlaceholders(player, input);
-        }
-
-        return MINI_MESSAGE.deserialize(input).decoration(TextDecoration.ITALIC, false);
-    }
-
     public Component deserialize(String input, final Player player, final Object... placeholders) {
-        if(player != null && BetterKingdoms.getInstance().isUsePlaceholderAPI()) {
+        if(player != null && BetterKingdoms.getInstance().getHookManager().isPlaceholerAPIHook()) {
             input = PlaceholderAPI.setPlaceholders(player, input);
         }
 
-        return MINI_MESSAGE.deserialize(formatPlaceholders(input, placeholders)).decoration(TextDecoration.ITALIC, false);
+        return MINI_MESSAGE.deserialize(placeholders != null ? formatPlaceholders(input, placeholders) : input).decoration(TextDecoration.ITALIC, false);
     }
 
+    public Component deserialize(String input, final Player player) {
+        return deserialize(input, player, null);
+    }
 
     public String serialize(final Component input) {
         return MINI_MESSAGE.serialize(input.decoration(TextDecoration.ITALIC, false));

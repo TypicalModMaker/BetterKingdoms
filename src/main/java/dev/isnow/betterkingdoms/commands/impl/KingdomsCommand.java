@@ -11,6 +11,7 @@ import dev.isnow.betterkingdoms.kingdoms.impl.model.KingdomUser;
 import dev.isnow.betterkingdoms.util.ComponentUtil;
 import dev.isnow.betterkingdoms.util.ThreadUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -62,7 +63,6 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-
         Kingdom kingdom = new Kingdom(kingdomName, blockLocation);
         kingdom.addMember(kUser, KingdomRank.OWNER);
 
@@ -74,7 +74,24 @@ public class KingdomsCommand extends BaseCommand {
     @Subcommand("%claim")
     @CommandPermission("betterkingdoms.claim")
     public void claimTerrain(final Player player) {
-        player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
+        final Optional<KingdomUser> user = BetterKingdoms.getInstance().getKingdomManager().findUser(player);
+
+        final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
+
+        if(user.isEmpty()) {
+            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
+            return;
+        }
+
+        final KingdomUser kUser = user.get();
+        if(kUser.getAttachedKingdom() == null) {
+            player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
+            return;
+        }
+        
+        final Chunk playerChunk = player.getChunk();
+
+
     }
 
     @Subcommand("%disband")

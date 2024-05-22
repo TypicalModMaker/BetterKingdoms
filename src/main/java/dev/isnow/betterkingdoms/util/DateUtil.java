@@ -19,6 +19,6 @@ public class DateUtil {
         StringBuilder sb = new StringBuilder(8);;
         Formatter f = new Formatter(sb, Locale.getDefault());
 
-        return f.format("%d:%03d", seconds, milliseconds).toString();
+        return f.format("%d.%03d", seconds, milliseconds).toString();
     }
 }
