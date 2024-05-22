@@ -197,7 +197,7 @@ public class MessagesConfig extends BetterConfig {
             "%kingdom_name%",
             "%player_name%"
     })
-    String changedDescription = "&aSuccessfully changed your kingdoms description to %description%";
+    String changedDescription = "&aSuccessfully changed your kingdoms description to %kingdom_description%";
 
     @Comment({"",
             "Placeholders:",

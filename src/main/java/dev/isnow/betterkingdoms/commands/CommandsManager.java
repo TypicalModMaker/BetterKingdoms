@@ -1,9 +1,11 @@
 package dev.isnow.betterkingdoms.commands;
 
+import co.aikar.commands.Locales;
 import co.aikar.commands.PaperCommandManager;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.commands.impl.KingdomsCommand;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
+import dev.isnow.betterkingdoms.util.type.Locale;
 
 public class CommandsManager {
 
@@ -11,6 +13,7 @@ public class CommandsManager {
 
     public CommandsManager(BetterKingdoms plugin) {
         internalCommandManager = new PaperCommandManager(plugin);
+        internalCommandManager.getLocales().setDefaultLocale(plugin.getConfigManager().getCommandsConfig().getCommandsLocale().getJavaLocale());
 
 //        internalCommandManager.enableUnstableAPI("brigadier");
 //        internalCommandManager.enableUnstableAPI("help");
