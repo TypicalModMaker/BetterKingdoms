@@ -1,11 +1,9 @@
 package dev.isnow.betterkingdoms.config.impl.commands;
 
-import co.aikar.commands.Locales;
 import de.exlll.configlib.Configuration;
 import dev.isnow.betterkingdoms.config.BetterConfig;
 import dev.isnow.betterkingdoms.util.type.Locale;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -13,12 +11,7 @@ import lombok.Setter;
 @Configuration
 public class CommandConfig extends BetterConfig {
 
-    public CommandConfig() {
-        super("commands");
-    }
-
     Locale commandsLocale = Locale.POLISH;
-
     String help = "pomoc|help";
     String create = "zaloz|stworz|create", create_tab_completion = "<Nazwa_Królestwa>";
     String claim = "zajmij|claim";
@@ -31,4 +24,7 @@ public class CommandConfig extends BetterConfig {
     String sethome = "ustawdom|sethome";
     String leave = "opusc|leave";
     String manualsave = "manualsave";
+    public CommandConfig() {
+        super("commands");
+    }
 }

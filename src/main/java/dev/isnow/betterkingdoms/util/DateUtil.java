@@ -16,7 +16,8 @@ public class DateUtil {
             elapsedMilliseconds -= seconds * 1000;
         }
         milliseconds = elapsedMilliseconds;
-        StringBuilder sb = new StringBuilder(8);;
+        StringBuilder sb = new StringBuilder(8);
+        ;
         Formatter f = new Formatter(sb, Locale.getDefault());
 
         return f.format("%d.%03d", seconds, milliseconds).toString();

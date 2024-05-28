@@ -14,6 +14,7 @@ public class MoveEvent implements Listener {
 
         if ((from.getBlockX() >> 4) != (to.getBlockX() >> 4) || (from.getBlockZ() >> 4) != (to.getBlockZ() >> 4)) {
             ThreadUtil.getSpecifiedKingdomChunkAsync(event.getTo().getChunk(), kingdom -> {
+                // TODO: Switch to some non-deprecated method
                 kingdom.ifPresent(kingdomChunk -> event.getPlayer().sendTitle("Entered kingdom:", kingdomChunk.getAttachedKingdom().getName(), 15, 40, 15));
             });
         }

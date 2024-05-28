@@ -82,6 +82,7 @@ public class KingdomManager {
     public final Collection<Kingdom> getAllLoadedKingdoms() {
         return kingdoms.getAll();
     }
+
     public final Collection<KingdomUser> getAllLoadedUsers() {
         return kingdomUsers.getAll();
     }

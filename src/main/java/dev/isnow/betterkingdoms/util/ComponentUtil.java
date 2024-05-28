@@ -24,24 +24,24 @@ public class ComponentUtil {
                     .useUnusualXRepeatedCharacterHexFormat()
                     .build();
     private final MiniMessage MINI_MESSAGE = MiniMessage.builder().postProcessor(it ->
-        it.replaceText(replacementBuilder -> {
-            replacementBuilder.match(
-                    Pattern.compile(
-                            ".*"
-                    )
-            ).replacement((matchResult, builder) -> LEGACY_COMPONENT_SERIALIZER.deserialize(matchResult.group()));
-        }).replaceText(replacementBuilder -> {
-            replacementBuilder.match(Pattern.compile(">>")).replacement("»");
-        }).replaceText(replacementBuilder -> {
-            replacementBuilder.match(Pattern.compile("<<")).replacement("«");
-        })).build();
+            it.replaceText(replacementBuilder -> {
+                replacementBuilder.match(
+                        Pattern.compile(
+                                ".*"
+                        )
+                ).replacement((matchResult, builder) -> LEGACY_COMPONENT_SERIALIZER.deserialize(matchResult.group()));
+            }).replaceText(replacementBuilder -> {
+                replacementBuilder.match(Pattern.compile(">>")).replacement("»");
+            }).replaceText(replacementBuilder -> {
+                replacementBuilder.match(Pattern.compile("<<")).replacement("«");
+            })).build();
 
     public Component deserialize(final String input) {
         return deserialize(input, null);
     }
 
     public Component deserialize(String input, final Player player, final Object... placeholders) {
-        if(player != null && BetterKingdoms.getInstance().getHookManager().isPlaceholerAPIHook()) {
+        if (player != null && BetterKingdoms.getInstance().getHookManager().isPlaceholerAPIHook()) {
             input = PlaceholderAPI.setPlaceholders(player, input);
         }
 

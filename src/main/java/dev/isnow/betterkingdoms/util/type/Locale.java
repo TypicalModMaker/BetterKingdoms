@@ -40,7 +40,7 @@ public enum Locale {
     HUNGARIAN(new java.util.Locale("hu"));
 
     private final java.util.Locale javaLocale;
-    
+
     Locale(java.util.Locale locale) {
         this.javaLocale = locale;
     }

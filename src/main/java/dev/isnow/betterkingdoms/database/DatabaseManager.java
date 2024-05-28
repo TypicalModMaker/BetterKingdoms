@@ -54,9 +54,9 @@ public class DatabaseManager {
 
         final boolean firstRun = masterConfig.isFirstRun();
 
-        if(firstRun) {
+        if (firstRun) {
             generateMigration(authConfig.getDatabaseType(), plugin);
-        } else if(SCHEMA_VERSION > masterConfig.getSchemaVersion()) {
+        } else if (SCHEMA_VERSION > masterConfig.getSchemaVersion()) {
             BetterLogger.info("Schema version changed! BetterKingdoms will migrate the database automatically.");
             generateMigration(authConfig.getDatabaseType(), plugin);
 
@@ -97,7 +97,7 @@ public class DatabaseManager {
             db = DatabaseFactory.createWithContextClassLoader(config, pluginLoader);
 
             // Successfully migrated
-            if(!firstRun) {
+            if (!firstRun) {
                 masterConfig.setSchemaVersion(SCHEMA_VERSION);
                 BetterKingdoms.getInstance().getConfigManager().saveConfigs();
             }
@@ -123,13 +123,14 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+
     private DatabaseConfig getDatabaseConfig(final DataSourceConfig dataSourceConfig, final MasterConfig masterConfig) {
         final DatabaseConfig config = new DatabaseConfig();
         config.setDataSourceConfig(dataSourceConfig);
         config.setName("db");
 
         // Generate tables
-        if(masterConfig.isFirstRun()) {
+        if (masterConfig.isFirstRun()) {
             config.ddlGenerate(true);
             config.ddlRun(true);
 
@@ -207,12 +208,12 @@ public class DatabaseManager {
         final Transaction transaction = db.beginTransaction();
 
         try {
-            for(final Kingdom kingdom : BetterKingdoms.getInstance().getKingdomManager().getAllLoadedKingdoms()) {
+            for (final Kingdom kingdom : BetterKingdoms.getInstance().getKingdomManager().getAllLoadedKingdoms()) {
                 BetterLogger.debug("Saving kingdom: " + kingdom.getName());
                 kingdom.save();
             }
 
-            for(final KingdomUser user : BetterKingdoms.getInstance().getKingdomManager().getAllLoadedUsers()) {
+            for (final KingdomUser user : BetterKingdoms.getInstance().getKingdomManager().getAllLoadedUsers()) {
                 BetterLogger.debug("Saving user: " + Bukkit.getOfflinePlayer(user.getPlayerUuid()).getName());
                 user.save();
             }

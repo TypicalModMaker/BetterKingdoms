@@ -7,7 +7,7 @@ public class DatabaseRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        if(BetterKingdoms.getInstance().getDatabaseManager().getDb() != null) {
+        if (BetterKingdoms.getInstance().getDatabaseManager().getDb() != null) {
             BetterKingdoms.getInstance().getDatabaseManager().saveAllKingdoms();
         }
     }

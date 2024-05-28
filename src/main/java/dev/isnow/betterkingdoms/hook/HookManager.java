@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 @Getter
 public class HookManager {
 
-    private VaultHook vaultHook;
     private final boolean placeholerAPIHook;
+    private VaultHook vaultHook;
 
     public HookManager() {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {

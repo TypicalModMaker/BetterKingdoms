@@ -8,13 +8,12 @@ import org.bukkit.Bukkit;
 @UtilityClass
 public class BetterLogger {
 
-    private final String prefix = "&7[BetterKingdoms] >>";
-
     public final String bigPrefix = "\n _____     _   _           _____ _           _               \n" +
-                                     "| __  |___| |_| |_ ___ ___|  |  |_|___ ___ _| |___ _____ ___ \n" +
-                                     "| __ -| -_|  _|  _| -_|  _|    -| |   | . | . | . |     |_ -|\n" +
-                                     "|_____|___|_| |_| |___|_| |__|__|_|_|_|_  |___|___|_|_|_|___|\n" +
-                                     "                                      |___|                  ";
+            "| __  |___| |_| |_ ___ ___|  |  |_|___ ___ _| |___ _____ ___ \n" +
+            "| __ -| -_|  _|  _| -_|  _|    -| |   | . | . | . |     |_ -|\n" +
+            "|_____|___|_| |_| |___|_| |__|__|_|_|_|_  |___|___|_|_|_|___|\n" +
+            "                                      |___|                  ";
+    private final String prefix = "&7[BetterKingdoms] >>";
 
     public void error(final String log) {
         Bukkit.getConsoleSender().sendMessage(ComponentUtil.deserialize(prefix + " &c[ERROR] " + log));
@@ -29,7 +28,7 @@ public class BetterLogger {
     }
 
     public void debug(final String log) {
-        if(!BetterKingdoms.getInstance().getConfigManager().getMasterConfig().isDebug()) return;
+        if (!BetterKingdoms.getInstance().getConfigManager().getMasterConfig().isDebug()) return;
 
         Bukkit.getConsoleSender().sendMessage(ComponentUtil.deserialize(prefix + " &a[DEBUG] " + log));
     }

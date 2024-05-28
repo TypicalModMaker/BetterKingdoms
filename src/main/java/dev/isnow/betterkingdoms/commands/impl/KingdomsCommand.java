@@ -38,18 +38,18 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
         KingdomUser kUser = user.get();
-        if(kUser.getAttachedKingdom() != null) {
+        if (kUser.getAttachedKingdom() != null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getAlreadyHasKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName()));
             return;
         }
 
-        if(BetterKingdoms.getInstance().getKingdomManager().findKingdom(kingdomName).isPresent()) {
+        if (BetterKingdoms.getInstance().getKingdomManager().findKingdom(kingdomName).isPresent()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getKingdomExists(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName));
             return;
         }
@@ -58,7 +58,7 @@ public class KingdomsCommand extends BaseCommand {
         blockLocation.setPitch(player.getPitch());
         blockLocation.setYaw(player.getYaw());
 
-        if(blockLocation.getBlock().getType() != Material.AIR) {
+        if (blockLocation.getBlock().getType() != Material.AIR) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getCantPlaceNexus(), player, "%player_name%", player.getName(), "%kingdom_name%", kingdomName, "%nexus_full_location%", ComponentUtil.formatLocation(blockLocation, true), "%nexus_short_location%", ComponentUtil.formatLocation(blockLocation, false), "%nexus_location_x%", blockLocation.getBlockX(), "%nexus_location_y%", blockLocation.getBlockY(), "nexus_location_z%", blockLocation.getBlockZ()));
             return;
         }
@@ -78,17 +78,17 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
         final KingdomUser kUser = user.get();
-        if(kUser.getAttachedKingdom() == null) {
+        if (kUser.getAttachedKingdom() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
-        
+
         final Chunk playerChunk = player.getChunk();
 
 
@@ -101,20 +101,20 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
         final KingdomUser kUser = user.get();
-        if(kUser.getAttachedKingdom() == null) {
+        if (kUser.getAttachedKingdom() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
 
         final Kingdom attachedKingdom = kUser.getAttachedKingdom();
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank() != KingdomRank.OWNER) {
+        if (kUser.getKingdomRank() != null && kUser.getKingdomRank() != KingdomRank.OWNER) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntOwnKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName()));
             return;
         }
@@ -132,12 +132,12 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
-        if(targetUser.isEmpty()) {
+        if (targetUser.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataTarget(), player, "%player_name%", player.getName(), "%target_name%", target.getPlayer().getName()));
             return;
         }
@@ -146,27 +146,27 @@ public class KingdomsCommand extends BaseCommand {
         final KingdomUser tUser = targetUser.get();
         final Kingdom attachedKingdom = kUser.getAttachedKingdom();
 
-        if(kUser.getAttachedKingdom() == null) {
+        if (kUser.getAttachedKingdom() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
 
-        if(tUser.getAttachedKingdom() == null) {
+        if (tUser.getAttachedKingdom() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getTargetDoesntHaveKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName(), "%target_name%", targetPlayer.getName()));
             return;
         }
 
-        if(!tUser.getAttachedKingdom().getName().equals(attachedKingdom.getName())) {
+        if (!tUser.getAttachedKingdom().getName().equals(attachedKingdom.getName())) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getTargetInDifferentKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName(), "%target_name%", targetPlayer.getName(), "%target_kingdom_name%", tUser.getAttachedKingdom().getName()));
             return;
         }
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank() != KingdomRank.OWNER) {
+        if (kUser.getKingdomRank() != null && kUser.getKingdomRank() != KingdomRank.OWNER) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntOwnKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName()));
             return;
         }
 
-        if(kUser.getPlayerUuid() == tUser.getPlayerUuid()) {
+        if (kUser.getPlayerUuid() == tUser.getPlayerUuid()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getAlreadyOwnerOfKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName()));
             return;
         }
@@ -174,9 +174,9 @@ public class KingdomsCommand extends BaseCommand {
         tUser.setKingdomRank(KingdomRank.OWNER);
         kUser.setKingdomRank(KingdomRank.COOWNER);
 
-        for(final KingdomUser kingdomUser : attachedKingdom.getMembers()) {
+        for (final KingdomUser kingdomUser : attachedKingdom.getMembers()) {
             final Player bukkitPlayer = Bukkit.getPlayer(kingdomUser.getPlayerUuid());
-            if(bukkitPlayer != null) {
+            if (bukkitPlayer != null) {
                 player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNewKingAlert(), player, "%old_player_name%", player.getName(), "%kingdom_name%", attachedKingdom.getName(), "%new_king_name%", targetPlayer.getName()));
             }
         }
@@ -190,23 +190,23 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
         final KingdomUser kUser = user.get();
-        if(kUser.getAttachedKingdom() == null) {
+        if (kUser.getAttachedKingdom() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
 
-        if(description.length() > BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getMaximumDescriptionLength()) {
+        if (description.length() > BetterKingdoms.getInstance().getConfigManager().getKingdomConfig().getMaximumDescriptionLength()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDescriptionTooLong(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%kingdom_description%", description));
             return;
         }
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
+        if (kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoRightsToEditDescription(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%kingdom_description%", description, "%player_kingdom_rank%", ComponentUtil.getTranslationForRank(kUser.getKingdomRank())));
             return;
         }
@@ -224,12 +224,12 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
-        if(targetUser.isEmpty()) {
+        if (targetUser.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataTarget(), player, "%player_name%", player.getName(), "%target_name%", target.getPlayer().getName()));
             return;
         }
@@ -238,13 +238,13 @@ public class KingdomsCommand extends BaseCommand {
         final KingdomUser tUser = targetUser.get();
         final Kingdom attachedKingdom = kUser.getAttachedKingdom();
 
-        if(attachedKingdom == null) {
+        if (attachedKingdom == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
 
-        if(tUser.getAttachedKingdom() != null) {
-            if(attachedKingdom.getName().equals(tUser.getAttachedKingdom().getName())) {
+        if (tUser.getAttachedKingdom() != null) {
+            if (attachedKingdom.getName().equals(tUser.getAttachedKingdom().getName())) {
                 player.sendMessage(ComponentUtil.deserialize(messagesConfig.getAlreadyInSameKingdom(), player, "%player_name%", player.getName(), "%target_name%", target.getPlayer().getName()));
             } else {
                 player.sendMessage(ComponentUtil.deserialize(messagesConfig.getAlreadyHasKingdom(), player, "%player_name%", player.getName(), "%target_name%", target.getPlayer().getName()));
@@ -252,12 +252,12 @@ public class KingdomsCommand extends BaseCommand {
             return;
         }
 
-        if(tUser.getKingdomInvite() != null) {
+        if (tUser.getKingdomInvite() != null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getTargetHasUnresolvedInvite(), player, "%player_name%", player.getName(), "%target_name%", target.getPlayer().getName()));
             return;
         }
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank() == KingdomRank.MEMBER) {
+        if (kUser.getKingdomRank() != null && kUser.getKingdomRank() == KingdomRank.MEMBER) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoRightsToInvite(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%player_kingdom_rank%", ComponentUtil.getTranslationForRank(kUser.getKingdomRank())));
             return;
         }
@@ -278,18 +278,18 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
 
         final KingdomUser kUser = user.get();
-        if(kUser.getAttachedKingdom() != null) {
+        if (kUser.getAttachedKingdom() != null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getAlreadyHasKingdom(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName()));
             return;
         }
 
-        if(kUser.getKingdomInvite() == null) {
+        if (kUser.getKingdomInvite() == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoPendingInvites(), player, "%player_name%", player.getName()));
             return;
         }
@@ -308,7 +308,7 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
@@ -316,7 +316,7 @@ public class KingdomsCommand extends BaseCommand {
         final KingdomUser kUser = user.get();
 
         final Kingdom attachedKingdom = kUser.getAttachedKingdom();
-        if(attachedKingdom == null) {
+        if (attachedKingdom == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
@@ -335,7 +335,7 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getFailedDataUser(), player, "%player_name%", player.getName()));
             return;
         }
@@ -343,14 +343,14 @@ public class KingdomsCommand extends BaseCommand {
         final KingdomUser kUser = user.get();
 
         final Kingdom attachedKingdom = kUser.getAttachedKingdom();
-        if(attachedKingdom == null) {
+        if (attachedKingdom == null) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getDoesntHaveKingdom(), player, "%player_name%", player.getName()));
             return;
         }
 
         final Location playerLocation = player.getLocation().clone();
 
-        if(kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
+        if (kUser.getKingdomRank() != null && kUser.getKingdomRank().ordinal() > KingdomRank.OFFICER.ordinal()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getNoRightsToSetHome(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%player_kingdom_rank%", ComponentUtil.getTranslationForRank(kUser.getKingdomRank()), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x%", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_z%", playerLocation.getBlockZ()));
             return;
         }
@@ -375,7 +375,7 @@ public class KingdomsCommand extends BaseCommand {
 
         final MessagesConfig messagesConfig = BetterKingdoms.getInstance().getConfigManager().getMessagesConfig();
 
-        if(kingdom.isEmpty()) {
+        if (kingdom.isEmpty()) {
             player.sendMessage(ComponentUtil.deserialize(messagesConfig.getKingdomDoesntExist(), player, "%kingdom_name%", kingdomName));
             return;
         }
@@ -400,7 +400,7 @@ public class KingdomsCommand extends BaseCommand {
 
         BetterKingdoms.getInstance().getCommandsManager().reload();
 
-        for(final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.updateCommands();
         }
 

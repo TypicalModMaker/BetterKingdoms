@@ -25,7 +25,7 @@ public class VaultHook {
     }
 
     public double getMoney(final Player player) {
-        if(economy == null) {
+        if (economy == null) {
             return 0;
         }
 
@@ -33,7 +33,7 @@ public class VaultHook {
     }
 
     public EconomyResponse withdrawMoney(final Player player, final double amount) {
-        if(economy == null) {
+        if (economy == null) {
             return failHookResponse;
         }
 

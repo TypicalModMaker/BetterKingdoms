@@ -33,16 +33,16 @@ public class BetterKingdomsExpansion extends PlaceholderExpansion {
         params = PlaceholderAPI.setBracketPlaceholders(player, params);
 
         final String[] split = params.split(" ");
-        if(split.length < 1) {
+        if (split.length < 1) {
             return "";
         }
 
         final String type = split[0];
-        if(type.equalsIgnoreCase("kingdom")) {
+        if (type.equalsIgnoreCase("kingdom")) {
 
         }
 
-        if(type.equalsIgnoreCase("user")) {
+        if (type.equalsIgnoreCase("user")) {
 
         }
 

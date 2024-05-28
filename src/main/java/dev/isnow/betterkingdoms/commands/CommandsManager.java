@@ -1,11 +1,9 @@
 package dev.isnow.betterkingdoms.commands;
 
-import co.aikar.commands.Locales;
 import co.aikar.commands.PaperCommandManager;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.commands.impl.KingdomsCommand;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
-import dev.isnow.betterkingdoms.util.type.Locale;
 
 public class CommandsManager {
 

@@ -6,7 +6,6 @@ import dev.isnow.betterkingdoms.config.ConfigManager;
 import dev.isnow.betterkingdoms.database.DatabaseManager;
 import dev.isnow.betterkingdoms.database.DatabaseRunnable;
 import dev.isnow.betterkingdoms.hook.HookManager;
-import dev.isnow.betterkingdoms.hook.placeholderapi.BetterKingdomsExpansion;
 import dev.isnow.betterkingdoms.kingdoms.KingdomManager;
 import dev.isnow.betterkingdoms.reflection.ClassRegistrationManager;
 import dev.isnow.betterkingdoms.util.DateUtil;
@@ -69,14 +68,14 @@ public final class BetterKingdoms extends JavaPlugin {
         databaseManager = new DatabaseManager(this, pluginClassLoader);
         Thread.currentThread().setContextClassLoader(originalClassLoader);
 
-        if(databaseManager.getDb() == null) {
+        if (databaseManager.getDb() == null) {
             BetterLogger.info("Failed to connect to the database! This plugin won't work without an database. Refer to docs for more info.");
             Bukkit.getPluginManager().disablePlugin(BetterKingdoms.getInstance());
             return;
         } else {
             BetterLogger.info("Connected successfully.");
 
-            if(configManager.getMasterConfig().isFirstRun()) {
+            if (configManager.getMasterConfig().isFirstRun()) {
                 configManager.getMasterConfig().setFirstRun(false);
                 BetterKingdoms.getInstance().getConfigManager().saveConfigs();
             }
@@ -102,7 +101,7 @@ public final class BetterKingdoms extends JavaPlugin {
             @Override
             public void run() {
 
-                if(testEntity.isDead()) {
+                if (testEntity.isDead()) {
                     BetterLogger.warn("Failed to get nexus block height, will use the default value for full solid blocks.");
                 } else {
                     kingdomManager.nexusBlockHeight = -(block.getY() - testEntity.getLocation().getY());
@@ -134,7 +133,7 @@ public final class BetterKingdoms extends JavaPlugin {
         BetterLogger.info("Unloading commands");
         commandsManager.unload();
 
-        if(databaseManager.getDb() != null) {
+        if (databaseManager.getDb() != null) {
             databaseManager.saveAllKingdoms();
             databaseManager.shutdown();
         }

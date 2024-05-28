@@ -17,8 +17,9 @@ public class LoginEvent implements Listener {
 
         BetterKingdoms.getInstance().getKingdomManager().preloadUser(uuid);
 
-        if(!BetterKingdoms.getInstance().getKingdomManager().userExists(uuid)) {
+        if (!BetterKingdoms.getInstance().getKingdomManager().userExists(uuid)) {
             BetterLogger.debug("Adding new user: " + event.getName());
+
             BetterKingdoms.getInstance().getKingdomManager().addUser(new KingdomUser(uuid));
         }
     }

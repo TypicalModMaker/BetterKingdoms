@@ -11,7 +11,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "betterkingdoms_chunk")
-@Getter @Setter
+@Getter
+@Setter
 public class KingdomChunk extends BaseKingdom {
     @Column(name = "chunkx")
     private int chunkX;
@@ -24,7 +25,7 @@ public class KingdomChunk extends BaseKingdom {
     @NotNull
     private Kingdom attachedKingdom;
 
-    public KingdomChunk(final int chunkX, final  int chunkZ, final Kingdom attachedKingdom) {
+    public KingdomChunk(final int chunkX, final int chunkZ, final Kingdom attachedKingdom) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.attachedKingdom = attachedKingdom;

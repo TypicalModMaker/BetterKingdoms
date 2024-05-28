@@ -22,9 +22,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "betterkingdoms_kingdom")
-@Getter@Setter
+@Getter
+@Setter
 public class Kingdom extends BaseKingdom {
-    @NotNull @Length(30) @Column(unique = true, name = "name")
+    @NotNull
+    @Length(30)
+    @Column(unique = true, name = "name")
     private String name;
 
     @Column(name = "description")
@@ -36,10 +39,14 @@ public class Kingdom extends BaseKingdom {
     @OneToMany(mappedBy = "attachedKingdom", cascade = CascadeType.ALL)
     private List<KingdomChunk> claimedChunks;
 
-    @NotNull @Column(name = "nexuslocation") @Convert(converter = LocationConverter.class)
+    @NotNull
+    @Column(name = "nexuslocation")
+    @Convert(converter = LocationConverter.class)
     private Location nexusLocation;
 
-    @NotNull @Column(name = "homelocation") @Convert(converter = AdvancedLocationConverter.class)
+    @NotNull
+    @Column(name = "homelocation")
+    @Convert(converter = AdvancedLocationConverter.class)
     private Location homeLocation;
 
     @OneToMany(mappedBy = "attachedKingdom", cascade = CascadeType.ALL)
@@ -64,8 +71,7 @@ public class Kingdom extends BaseKingdom {
 
         this.claimedChunks = new ArrayList<>();
 
-        // this is so retarded istg
-
+        // this is so retarded istg, certified relations moment
         this.save();
 
         kingdomChunk.save();
@@ -86,13 +92,13 @@ public class Kingdom extends BaseKingdom {
         final Transaction transaction = BetterKingdoms.getInstance().getDatabaseManager().getDb().beginTransaction();
 
         try {
-            for(final KingdomUser user : members) {
+            for (final KingdomUser user : members) {
                 user.setAttachedKingdom(null);
                 user.setKingdomRank(null);
                 user.save();
             }
 
-            for(final KingdomUser user : pendingInvites) {
+            for (final KingdomUser user : pendingInvites) {
                 user.setKingdomInvite(null);
                 user.save();
             }
@@ -114,7 +120,6 @@ public class Kingdom extends BaseKingdom {
         }.runTask(BetterKingdoms.getInstance());
 
         BetterKingdoms.getInstance().getDatabaseManager().deleteKingdom(this);
-
-
     }
 }
+

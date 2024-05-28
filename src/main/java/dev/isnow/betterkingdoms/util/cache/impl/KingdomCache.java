@@ -7,8 +7,8 @@ import dev.isnow.betterkingdoms.util.cache.BetterCache;
 public class KingdomCache extends BetterCache<String, Kingdom> {
     public KingdomCache() {
         super("Kingdom",
-              key -> BetterKingdoms.getInstance().getDatabaseManager().loadKingdom(key),
-              value -> BetterKingdoms.getInstance().getDatabaseManager().saveKingdom(value),
-              Kingdom::deleteKingdom);
+                key -> BetterKingdoms.getInstance().getDatabaseManager().loadKingdom(key),
+                value -> BetterKingdoms.getInstance().getDatabaseManager().saveKingdom(value),
+                Kingdom::deleteKingdom);
     }
 }

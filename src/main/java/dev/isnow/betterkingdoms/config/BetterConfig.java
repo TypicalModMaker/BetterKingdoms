@@ -2,7 +2,6 @@ package dev.isnow.betterkingdoms.config;
 
 import de.exlll.configlib.YamlConfigurations;
 import dev.isnow.betterkingdoms.BetterKingdoms;
-import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
 
 import java.io.File;

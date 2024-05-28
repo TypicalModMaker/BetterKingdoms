@@ -12,13 +12,16 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "betterkingdoms_users")
-@Getter@Setter
+@Getter
+@Setter
 public class KingdomUser extends BaseKingdom {
 
-    @NotNull @Column(unique = true, name = "playeruuid")
+    @NotNull
+    @Column(unique = true, name = "playeruuid")
     private UUID playerUuid;
 
-    @ManyToOne @Column(name = "attachedkingdom")
+    @ManyToOne
+    @Column(name = "attachedkingdom")
     private Kingdom attachedKingdom;
 
     @Column(name = "kingdomrank")

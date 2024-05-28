@@ -7,13 +7,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 @Converter
-public class LocationConverter implements AttributeConverter<Location, String> {
+public class AdvancedLocationConverter implements AttributeConverter<Location, String> {
     @Override
     public String convertToDatabaseColumn(Location location) {
         return location.getWorld().getName() + ";" +
                 location.getX() + ";" +
                 location.getY() + ";" +
-                location.getZ() + ";";
+                location.getZ() + ";" +
+                location.getYaw() + ";" +
+                location.getPitch() + ";";
     }
 
     @Override
@@ -26,10 +28,18 @@ public class LocationConverter implements AttributeConverter<Location, String> {
         final double y = Double.parseDouble(split[2]);
         final double z = Double.parseDouble(split[3]);
 
-        if(world != null) {
-            return new Location(world, x, y, z);
+        float yaw = 0;
+        float pitch = 0;
+
+        if (split.length > 4) {
+            yaw = Float.parseFloat(split[4]);
+            pitch = Float.parseFloat(split[5]);
+        }
+
+        if (world != null) {
+            return new Location(world, x, y, z, yaw, pitch);
         } else {
-            return new Location(Bukkit.getWorlds().get(0), x, y, z);
+            return new Location(Bukkit.getWorlds().get(0), x, y, z, yaw, pitch);
         }
     }
 }

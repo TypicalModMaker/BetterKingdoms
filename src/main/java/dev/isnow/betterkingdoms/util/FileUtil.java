@@ -21,12 +21,12 @@ public class FileUtil {
         try {
             final long fileCount = Files.list(path).count();
 
-            if(fileCount > 1) {
+            if (fileCount > 1) {
                 Optional<Path> oldestFilePath = Files.list(path)
                         .filter(f -> !Files.isDirectory(f))
                         .min(Comparator.comparingLong(f -> f.toFile().lastModified()));
 
-                if(oldestFilePath.isPresent()) {
+                if (oldestFilePath.isPresent()) {
                     file = Optional.of(oldestFilePath.get().toFile());
                 }
             }

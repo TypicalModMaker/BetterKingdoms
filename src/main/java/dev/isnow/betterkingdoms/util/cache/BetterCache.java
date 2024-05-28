@@ -13,16 +13,17 @@ public class BetterCache<K, V> {
     private final LoadingCache<K, V> cache;
     private final ISaver<V> saver;
 
-    @SuppressWarnings("all") // Unchecked cast & 'while' statement cannot complete without throwing an exception supress false positive
+    @SuppressWarnings("all")
+    // Unchecked cast & 'while' statement cannot complete without throwing an exception supress false positive
     public BetterCache(final String name, final ILoader<K, V> loader, final ISaver<V> saver, final IRemover<V> remover) {
         this.saver = saver;
         cache = Caffeine.newBuilder()
                 .expireAfterAccess(300, TimeUnit.SECONDS)
                 .removalListener((key, value, cause) -> {
-                    if(value != null && !BetterKingdoms.getInstance().isShuttingDown()) {
-                        if(cause == RemovalCause.EXPIRED || cause == RemovalCause.SIZE) {
+                    if (value != null && !BetterKingdoms.getInstance().isShuttingDown()) {
+                        if (cause == RemovalCause.EXPIRED || cause == RemovalCause.SIZE) {
                             saver.save((V) value);
-                        } else if(cause == RemovalCause.EXPLICIT && remover != null) {
+                        } else if (cause == RemovalCause.EXPLICIT && remover != null) {
                             remover.remove((V) value);
                         }
                     }
@@ -37,7 +38,7 @@ public class BetterCache<K, V> {
 
                     TimeUnit.SECONDS.sleep(30);
                 } catch (Exception e) {
-                    if(BetterKingdoms.getInstance().isShuttingDown()) {
+                    if (BetterKingdoms.getInstance().isShuttingDown()) {
                         return;
                     }
                     BetterLogger.warn("Failed to clean the cache: " + e + ", Cache type: " + name);
@@ -52,7 +53,7 @@ public class BetterCache<K, V> {
     }
 
     public V get(final K key, final boolean runLoader) {
-        if(runLoader) {
+        if (runLoader) {
             return cache.get(key);
         } else {
             return cache.getIfPresent(key);

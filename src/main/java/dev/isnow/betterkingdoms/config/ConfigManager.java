@@ -1,19 +1,12 @@
 package dev.isnow.betterkingdoms.config;
 
-import de.exlll.configlib.YamlConfigurations;
-import dev.isnow.betterkingdoms.BetterKingdoms;
 import dev.isnow.betterkingdoms.config.impl.MasterConfig;
 import dev.isnow.betterkingdoms.config.impl.commands.CommandConfig;
 import dev.isnow.betterkingdoms.config.impl.database.DatabaseConfig;
 import dev.isnow.betterkingdoms.config.impl.kingdom.KingdomConfig;
+import dev.isnow.betterkingdoms.config.impl.kingdom.ResourcePointsConfig;
 import dev.isnow.betterkingdoms.config.impl.messages.MessagesConfig;
-import dev.isnow.betterkingdoms.util.logger.BetterLogger;
 import lombok.Getter;
-
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Getter
 public class ConfigManager {
@@ -22,6 +15,7 @@ public class ConfigManager {
     private DatabaseConfig databaseConfig;
     private CommandConfig commandsConfig;
     private KingdomConfig kingdomConfig;
+    private ResourcePointsConfig resourcePointsConfig;
     private MessagesConfig messagesConfig;
 
     public ConfigManager() {
@@ -37,6 +31,7 @@ public class ConfigManager {
         databaseConfig = (DatabaseConfig) new DatabaseConfig().load();
         commandsConfig = (CommandConfig) new CommandConfig().load();
         kingdomConfig = (KingdomConfig) new KingdomConfig().load();
+        resourcePointsConfig = (ResourcePointsConfig) new ResourcePointsConfig().load();
         messagesConfig = (MessagesConfig) new MessagesConfig().load();
     }
 

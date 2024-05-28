@@ -23,7 +23,7 @@ public class ThreadUtil {
             return null;
         });
 
-        if(action != null) {
+        if (action != null) {
             kingdomTask.thenAccept(action);
         }
 
@@ -36,7 +36,7 @@ public class ThreadUtil {
             return null;
         });
 
-        if(action != null) {
+        if (action != null) {
             chunkTask.thenAccept(action);
         }
 
@@ -49,7 +49,7 @@ public class ThreadUtil {
             return null;
         });
 
-        if(action != null) {
+        if (action != null) {
             kingdomTask.thenAccept(action);
         }
 
@@ -71,7 +71,7 @@ public class ThreadUtil {
             return null;
         });
 
-        if(action != null) {
+        if (action != null) {
             kingdomTask.thenAccept(action);
         }
     }
