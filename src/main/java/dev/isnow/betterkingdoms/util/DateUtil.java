@@ -8,7 +8,7 @@ import java.util.Locale;
 @UtilityClass
 public class DateUtil {
     public static String formatElapsedTime(long elapsedMilliseconds) {
-        // Break the elapsed seconds into milliseconds and seconds. // From Android
+        // Break the elapsed milliseconds into seconds and milliseconds. From Android
         long seconds = 0;
         long milliseconds;
         if (elapsedMilliseconds >= 1000) {
@@ -17,7 +17,7 @@ public class DateUtil {
         }
         milliseconds = elapsedMilliseconds;
         StringBuilder sb = new StringBuilder(8);
-        ;
+
         Formatter f = new Formatter(sb, Locale.getDefault());
 
         return f.format("%d.%03d", seconds, milliseconds).toString();
