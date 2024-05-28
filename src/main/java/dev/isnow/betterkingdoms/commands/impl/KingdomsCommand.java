@@ -27,7 +27,7 @@ public class KingdomsCommand extends BaseCommand {
     @Subcommand("%help")
     @CatchUnknown
     public void doHelp(final Player player) {
-        player.sendMessage(ComponentUtil.deserialize("&aBetterKingdoms"));
+        player.sendMessage(ComponentUtil.deserialize(BetterKingdoms.getInstance().getConfigManager().getCommandsConfig().getHelpMessage()));
     }
 
     @Subcommand("%create")
@@ -361,7 +361,7 @@ public class KingdomsCommand extends BaseCommand {
         player.sendMessage(ComponentUtil.deserialize(messagesConfig.getSuccessfullySetNewHomeLocation(), player, "%player_name%", player.getName(), "%kingdom_name%", kUser.getAttachedKingdom().getName(), "%home_full_location%", ComponentUtil.formatLocation(playerLocation, true), "%home_short_location%", ComponentUtil.formatLocation(playerLocation, false), "%home_location_x%", playerLocation.getBlockX(), "%home_location_y%", playerLocation.getBlockY(), "%home_location_z%", playerLocation.getBlockZ()));
     }
 
-    @Subcommand("admin %manualsave")
+    @Subcommand("admin manualsave")
     @CommandPermission("betterkingdoms.admin.manualsave|betterkingdoms.admin.*")
     public void databaseSave(final Player player) {
         BetterKingdoms.getInstance().getThreadPool().submit(BetterKingdoms.getInstance().getDatabaseManager()::saveAllKingdoms);

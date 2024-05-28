@@ -51,7 +51,5 @@ public class CommandsManager {
 
         internalCommandManager.getCommandReplacements().addReplacement("home", commandConfig.getHome());
         internalCommandManager.getCommandReplacements().addReplacement("sethome", commandConfig.getSethome());
-
-        internalCommandManager.getCommandReplacements().addReplacement("manualsave", commandConfig.getManualsave());
     }
 }

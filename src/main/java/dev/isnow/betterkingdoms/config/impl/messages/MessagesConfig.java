@@ -20,6 +20,7 @@ public class MessagesConfig extends BetterConfig {
             "%player_name%"
     })
     String failedDataUser = "&cFailed to find your kingdoms data. Contact an administrator to resolve this issue.";
+
     @Comment({"",
             "Placeholders:",
             "%target_name%",
