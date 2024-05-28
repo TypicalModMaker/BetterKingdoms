@@ -41,6 +41,7 @@ public class ConfigManager {
         commandsConfig.save();
         kingdomConfig.save();
         messagesConfig.save();
+        resourcePointsConfig.save();
     }
 
 }
