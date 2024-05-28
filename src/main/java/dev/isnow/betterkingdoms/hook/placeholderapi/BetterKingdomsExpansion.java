@@ -3,6 +3,7 @@ package dev.isnow.betterkingdoms.hook.placeholderapi;
 import dev.isnow.betterkingdoms.BetterKingdoms;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.apache.commons.lang3.NotImplementedException;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,11 +40,11 @@ public class BetterKingdomsExpansion extends PlaceholderExpansion {
 
         final String type = split[0];
         if (type.equalsIgnoreCase("kingdom")) {
-
+            throw new NotImplementedException();
         }
 
         if (type.equalsIgnoreCase("user")) {
-
+            throw new NotImplementedException();
         }
 
         return ""; //
