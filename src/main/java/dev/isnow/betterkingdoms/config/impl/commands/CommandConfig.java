@@ -1,5 +1,6 @@
 package dev.isnow.betterkingdoms.config.impl.commands;
 
+import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
 import dev.isnow.betterkingdoms.config.BetterConfig;
 import dev.isnow.betterkingdoms.util.type.Locale;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Configuration
 public class CommandConfig extends BetterConfig {
 
+    @Comment({"", "Available locales are listed on the wiki"})
     Locale commandsLocale = Locale.POLISH;
 
     String helpMessage = """
